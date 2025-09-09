@@ -1,0 +1,46 @@
+import re
+
+def analizar_expresion():
+    funcion = input("Ingresa la función (ej: 2*y + x): ").strip()
+    variables_funcion = sorted(set(re.findall(r"[a-zA-Z]", funcion)))
+    operaciones = re.findall(r"[+\-*/^]", funcion)
+
+    restricciones = []
+    opcion = input("¿Deseas ingresar restricciones? (s/n): ").strip().lower()
+    if opcion == "s":
+        texto = input("Escribe restricciones separadas por ';' (ej: x>=0; y<=5): ").strip()
+        if texto:
+            restricciones = [r.strip() for r in texto.split(";") if r.strip()]
+
+    variables_restricciones = set()
+    for r in restricciones:
+        variables_restricciones.update(re.findall(r"[a-zA-Z]", r))
+
+    todas_las_variables = sorted(set(variables_funcion) | variables_restricciones)
+    terminos = re.findall(r"[+-]?\s*\d*\s*\*?\s*[a-zA-Z]", funcion)
+
+    patron_relacion = re.compile(r"(<=|>=|<|>|=)")
+    restricciones_validas = [r for r in restricciones if patron_relacion.search(r)]
+    restricciones_invalidas = [r for r in restricciones if not patron_relacion.search(r)]
+
+    print("\n===== RESULTADOS =====")
+    print(f"Función ingresada: {funcion}")
+    print(f"Variables detectadas: {todas_las_variables if todas_las_variables else 'Ninguna'}")
+    print(f"Términos identificados: {terminos if terminos else 'Ninguno'}")
+    print(f"Operaciones encontradas: {operaciones if operaciones else 'Ninguna'}")
+
+    if restricciones:
+        print("\nRestricciones ingresadas:")
+        for r in restricciones:
+            print(f" - {r}")
+
+    if restricciones_invalidas:
+        print("\n⚠️ Restricciones con formato no válido:")
+        for r in restricciones_invalidas:
+            print(f" - {r}")
+
+    if len(todas_las_variables) > 2:
+        print("\n⚠️ Se detectaron más de 2 variables. Este programa está pensado para máximo 2.\n")
+
+if __name__ == "__main__":
+    analizar_expresion()
