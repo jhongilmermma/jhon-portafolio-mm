@@ -1,442 +1,92 @@
-using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Linq;
-using System.Windows.Forms;
-using System.Data;
-
-namespace GraficadorFunciones
-{
-    public partial class Form1 : Form
-    {
-        private PictureBox pictureBoxGrafico;
-        private TextBox textBoxFuncion1;
-        private TextBox textBoxFuncion2;
-        private TextBox textBoxXMin;
-        private TextBox textBoxXMax;
-        private TextBox textBoxYMin;
-        private TextBox textBoxYMax;
-        private Button buttonGraficar;
-        private Button buttonLimpiar;
-        private CheckBox checkBoxFuncion1;
-        private CheckBox checkBoxFuncion2;
-        private Label labelFuncion1;
-        private Label labelFuncion2;
-        private Label labelRango;
-        private Panel panelControles;
-
-        public Form1()
-        {
-            InitializeComponent();
-            InicializarComponentes();
-        }
-
-        private void InitializeComponent()
-        {
-            this.SuspendLayout();
-            
-            // Configuración del formulario
-            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1200, 800);
-            this.Text = "Graficador de Funciones Matemáticas";
-            this.StartPosition = FormStartPosition.CenterScreen;
-            this.WindowState = FormWindowState.Maximized;
-            
-            this.ResumeLayout(false);
-        }
-
-        private void InicializarComponentes()
-        {
-            // Panel de controles
-            panelControles = new Panel();
-            panelControles.Dock = DockStyle.Top;
-            panelControles.Height = 120;
-            panelControles.BackColor = Color.LightGray;
-            panelControles.Padding = new Padding(10);
-
-            // Labels
-            labelFuncion1 = new Label();
-            labelFuncion1.Text = "Función 1: f(x) =";
-            labelFuncion1.Location = new Point(10, 15);
-            labelFuncion1.Size = new Size(100, 23);
-
-            labelFuncion2 = new Label();
-            labelFuncion2.Text = "Función 2: g(x) =";
-            labelFuncion2.Location = new Point(10, 45);
-            labelFuncion2.Size = new Size(100, 23);
-
-            labelRango = new Label();
-            labelRango.Text = "Rango:";
-            labelRango.Location = new Point(10, 75);
-            labelRango.Size = new Size(50, 23);
-
-            // TextBoxes para las funciones
-            textBoxFuncion1 = new TextBox();
-            textBoxFuncion1.Location = new Point(120, 15);
-            textBoxFuncion1.Size = new Size(200, 23);
-            textBoxFuncion1.Text = "x^2";
-
-            textBoxFuncion2 = new TextBox();
-            textBoxFuncion2.Location = new Point(120, 45);
-            textBoxFuncion2.Size = new Size(200, 23);
-            textBoxFuncion2.Text = "sin(x)";
-
-            // CheckBoxes para habilitar/deshabilitar funciones
-            checkBoxFuncion1 = new CheckBox();
-            checkBoxFuncion1.Location = new Point(330, 15);
-            checkBoxFuncion1.Size = new Size(80, 23);
-            checkBoxFuncion1.Text = "Graficar";
-            checkBoxFuncion1.Checked = true;
-
-            checkBoxFuncion2 = new CheckBox();
-            checkBoxFuncion2.Location = new Point(330, 45);
-            checkBoxFuncion2.Size = new Size(80, 23);
-            checkBoxFuncion2.Text = "Graficar";
-            checkBoxFuncion2.Checked = true;
-
-            // TextBoxes para el rango
-            Label labelXMin = new Label();
-            labelXMin.Text = "X min:";
-            labelXMin.Location = new Point(70, 75);
-            labelXMin.Size = new Size(50, 23);
-
-            textBoxXMin = new TextBox();
-            textBoxXMin.Location = new Point(120, 75);
-            textBoxXMin.Size = new Size(50, 23);
-            textBoxXMin.Text = "-10";
-
-            Label labelXMax = new Label();
-            labelXMax.Text = "X max:";
-            labelXMax.Location = new Point(180, 75);
-            labelXMax.Size = new Size(50, 23);
-
-            textBoxXMax = new TextBox();
-            textBoxXMax.Location = new Point(230, 75);
-            textBoxXMax.Size = new Size(50, 23);
-            textBoxXMax.Text = "10";
-
-            Label labelYMin = new Label();
-            labelYMin.Text = "Y min:";
-            labelYMin.Location = new Point(290, 75);
-            labelYMin.Size = new Size(50, 23);
-
-            textBoxYMin = new TextBox();
-            textBoxYMin.Location = new Point(340, 75);
-            textBoxYMin.Size = new Size(50, 23);
-            textBoxYMin.Text = "-10";
-
-            Label labelYMax = new Label();
-            labelYMax.Text = "Y max:";
-            labelYMax.Location = new Point(400, 75);
-            labelYMax.Size = new Size(50, 23);
-
-            textBoxYMax = new TextBox();
-            textBoxYMax.Location = new Point(450, 75);
-            textBoxYMax.Size = new Size(50, 23);
-            textBoxYMax.Text = "10";
-
-            // Botones
-            buttonGraficar = new Button();
-            buttonGraficar.Text = "Graficar";
-            buttonGraficar.Location = new Point(520, 35);
-            buttonGraficar.Size = new Size(80, 40);
-            buttonGraficar.BackColor = Color.LightBlue;
-            buttonGraficar.Click += ButtonGraficar_Click;
-
-            buttonLimpiar = new Button();
-            buttonLimpiar.Text = "Limpiar";
-            buttonLimpiar.Location = new Point(610, 35);
-            buttonLimpiar.Size = new Size(80, 40);
-            buttonLimpiar.BackColor = Color.LightCoral;
-            buttonLimpiar.Click += ButtonLimpiar_Click;
-
-            // PictureBox para el gráfico
-            pictureBoxGrafico = new PictureBox();
-            pictureBoxGrafico.Dock = DockStyle.Fill;
-            pictureBoxGrafico.BackColor = Color.White;
-            pictureBoxGrafico.BorderStyle = BorderStyle.FixedSingle;
-
-            // Agregar controles al panel
-            panelControles.Controls.Add(labelFuncion1);
-            panelControles.Controls.Add(labelFuncion2);
-            panelControles.Controls.Add(labelRango);
-            panelControles.Controls.Add(textBoxFuncion1);
-            panelControles.Controls.Add(textBoxFuncion2);
-            panelControles.Controls.Add(checkBoxFuncion1);
-            panelControles.Controls.Add(checkBoxFuncion2);
-            panelControles.Controls.Add(labelXMin);
-            panelControles.Controls.Add(textBoxXMin);
-            panelControles.Controls.Add(labelXMax);
-            panelControles.Controls.Add(textBoxXMax);
-            panelControles.Controls.Add(labelYMin);
-            panelControles.Controls.Add(textBoxYMin);
-            panelControles.Controls.Add(labelYMax);
-            panelControles.Controls.Add(textBoxYMax);
-            panelControles.Controls.Add(buttonGraficar);
-            panelControles.Controls.Add(buttonLimpiar);
-
-            // Agregar controles al formulario
-            this.Controls.Add(pictureBoxGrafico);
-            this.Controls.Add(panelControles);
-        }
-
-        private void ButtonGraficar_Click(object sender, EventArgs e)
-        {
-            try
-            {
-                DibujarGrafico();
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"Error al graficar: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-        }
-
-        private void ButtonLimpiar_Click(object sender, EventArgs e)
-        {
-            pictureBoxGrafico.Image = null;
-            pictureBoxGrafico.Invalidate();
-        }
-
-        private void DibujarGrafico()
-        {
-            // Obtener parámetros del rango
-            double xMin = Convert.ToDouble(textBoxXMin.Text);
-            double xMax = Convert.ToDouble(textBoxXMax.Text);
-            double yMin = Convert.ToDouble(textBoxYMin.Text);
-            double yMax = Convert.ToDouble(textBoxYMax.Text);
-
-            int width = pictureBoxGrafico.Width;
-            int height = pictureBoxGrafico.Height;
-
-            if (width <= 0 || height <= 0) return;
-
-            Bitmap bitmap = new Bitmap(width, height);
-            Graphics g = Graphics.FromImage(bitmap);
-            g.Clear(Color.White);
-
-            // Dibujar ejes
-            DibujarEjes(g, width, height, xMin, xMax, yMin, yMax);
-
-            // Dibujar cuadrícula
-            DibujarCuadricula(g, width, height, xMin, xMax, yMin, yMax);
-
-            // Graficar función 1
-            if (checkBoxFuncion1.Checked && !string.IsNullOrWhiteSpace(textBoxFuncion1.Text))
-            {
-                DibujarFuncion(g, textBoxFuncion1.Text, width, height, xMin, xMax, yMin, yMax, Color.Red, 2);
-            }
-
-            // Graficar función 2
-            if (checkBoxFuncion2.Checked && !string.IsNullOrWhiteSpace(textBoxFuncion2.Text))
-            {
-                DibujarFuncion(g, textBoxFuncion2.Text, width, height, xMin, xMax, yMin, yMax, Color.Blue, 2);
-            }
-
-            // Dibujar leyenda
-            DibujarLeyenda(g);
-
-            g.Dispose();
-            pictureBoxGrafico.Image = bitmap;
-        }
-
-        private void DibujarEjes(Graphics g, int width, int height, double xMin, double xMax, double yMin, double yMax)
-        {
-            Pen penEjes = new Pen(Color.Black, 2);
-
-            // Calcular posición del eje X (y = 0)
-            if (yMin <= 0 && yMax >= 0)
-            {
-                int yPos = (int)(height - (0 - yMin) / (yMax - yMin) * height);
-                g.DrawLine(penEjes, 0, yPos, width, yPos);
-            }
-
-            // Calcular posición del eje Y (x = 0)
-            if (xMin <= 0 && xMax >= 0)
-            {
-                int xPos = (int)((0 - xMin) / (xMax - xMin) * width);
-                g.DrawLine(penEjes, xPos, 0, xPos, height);
-            }
-
-            penEjes.Dispose();
-        }
-
-        private void DibujarCuadricula(Graphics g, int width, int height, double xMin, double xMax, double yMin, double yMax)
-        {
-            Pen penGrid = new Pen(Color.LightGray, 1);
-
-            // Líneas verticales
-            double stepX = (xMax - xMin) / 20;
-            for (double x = xMin; x <= xMax; x += stepX)
-            {
-                int xPos = (int)((x - xMin) / (xMax - xMin) * width);
-                g.DrawLine(penGrid, xPos, 0, xPos, height);
-            }
-
-            // Líneas horizontales
-            double stepY = (yMax - yMin) / 20;
-            for (double y = yMin; y <= yMax; y += stepY)
-            {
-                int yPos = (int)(height - (y - yMin) / (yMax - yMin) * height);
-                g.DrawLine(penGrid, 0, yPos, width, yPos);
-            }
-
-            penGrid.Dispose();
-        }
-
-        private void DibujarFuncion(Graphics g, string expresion, int width, int height, 
-                                   double xMin, double xMax, double yMin, double yMax, Color color, int grosor)
-        {
-            Pen pen = new Pen(color, grosor);
-            List<PointF> puntos = new List<PointF>();
-
-            double step = (xMax - xMin) / width;
-
-            for (double x = xMin; x <= xMax; x += step)
-            {
-                try
-                {
-                    double y = EvaluarFuncion(expresion, x);
-
-                    if (!double.IsNaN(y) && !double.IsInfinity(y) && y >= yMin && y <= yMax)
-                    {
-                        float xPos = (float)((x - xMin) / (xMax - xMin) * width);
-                        float yPos = (float)(height - (y - yMin) / (yMax - yMin) * height);
-                        puntos.Add(new PointF(xPos, yPos));
-                    }
-                    else if (puntos.Count > 1)
-                    {
-                        // Dibujar segmento actual si hay puntos
-                        g.DrawLines(pen, puntos.ToArray());
-                        puntos.Clear();
-                    }
-                }
-                catch
-                {
-                    // Si hay error en la evaluación, continuar
-                    if (puntos.Count > 1)
-                    {
-                        g.DrawLines(pen, puntos.ToArray());
-                        puntos.Clear();
-                    }
-                }
-            }
-
-            // Dibujar último segmento
-            if (puntos.Count > 1)
-            {
-                g.DrawLines(pen, puntos.ToArray());
-            }
-
-            pen.Dispose();
-        }
-
-        private void DibujarLeyenda(Graphics g)
-        {
-            Font font = new Font("Arial", 10);
-            Brush brushTexto = new SolidBrush(Color.Black);
-            
-            int yPos = 10;
-
-            if (checkBoxFuncion1.Checked)
-            {
-                Pen pen1 = new Pen(Color.Red, 3);
-                g.DrawLine(pen1, 10, yPos + 5, 30, yPos + 5);
-                g.DrawString($"f(x) = {textBoxFuncion1.Text}", font, brushTexto, 35, yPos);
-                pen1.Dispose();
-                yPos += 25;
-            }
-
-            if (checkBoxFuncion2.Checked)
-            {
-                Pen pen2 = new Pen(Color.Blue, 3);
-                g.DrawLine(pen2, 10, yPos + 5, 30, yPos + 5);
-                g.DrawString($"g(x) = {textBoxFuncion2.Text}", font, brushTexto, 35, yPos);
-                pen2.Dispose();
-            }
-
-            font.Dispose();
-            brushTexto.Dispose();
-        }
-
-        private double EvaluarFuncion(string expresion, double x)
-        {
-            // Reemplazar x con el valor numérico
-            string expr = expresion.ToLower().Replace("x", x.ToString(System.Globalization.CultureInfo.InvariantCulture));
-
-            // Reemplazar funciones matemáticas comunes
-            expr = expr.Replace("sin(", "Math.Sin(");
-            expr = expr.Replace("cos(", "Math.Cos(");
-            expr = expr.Replace("tan(", "Math.Tan(");
-            expr = expr.Replace("log(", "Math.Log10(");
-            expr = expr.Replace("ln(", "Math.Log(");
-            expr = expr.Replace("sqrt(", "Math.Sqrt(");
-            expr = expr.Replace("abs(", "Math.Abs(");
-            expr = expr.Replace("exp(", "Math.Exp(");
-
-            // Reemplazar constantes
-            expr = expr.Replace("pi", Math.PI.ToString(System.Globalization.CultureInfo.InvariantCulture));
-            expr = expr.Replace("e", Math.E.ToString(System.Globalization.CultureInfo.InvariantCulture));
-
-            // Manejar potencias (x^n -> Math.Pow(x,n))
-            expr = ReemplazarPotencias(expr);
-
-            try
-            {
-                // Usar DataTable.Compute para evaluar la expresión
-                DataTable table = new DataTable();
-                var result = table.Compute(expr, null);
-                return Convert.ToDouble(result);
-            }
-            catch
-            {
-                return double.NaN;
-            }
-        }
-
-        private string ReemplazarPotencias(string expr)
-        {
-            // Patrón simple para x^n
-            while (expr.Contains("^"))
-            {
-                int pos = expr.IndexOf("^");
-                if (pos > 0 && pos < expr.Length - 1)
-                {
-                    // Encontrar la base (número antes de ^)
-                    int startBase = pos - 1;
-                    while (startBase > 0 && (char.IsDigit(expr[startBase - 1]) || expr[startBase - 1] == '.'))
-                        startBase--;
-
-                    // Encontrar el exponente (número después de ^)
-                    int endExp = pos + 1;
-                    while (endExp < expr.Length && (char.IsDigit(expr[endExp]) || expr[endExp] == '.' || expr[endExp] == '-'))
-                        endExp++;
-
-                    string baseStr = expr.Substring(startBase, pos - startBase);
-                    string expStr = expr.Substring(pos + 1, endExp - pos - 1);
-
-                    string replacement = $"Math.Pow({baseStr},{expStr})";
-                    expr = expr.Substring(0, startBase) + replacement + expr.Substring(endExp);
-                }
-                else
-                {
-                    break;
-                }
-            }
-            return expr;
-        }
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Portafolio Futurista - Jhon Gilmer</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body {
+      background: radial-gradient(circle at top left, #0f172a, #020617);
     }
-
-    // Programa principal
-    public static class Program
-    {
-        [STAThread]
-        static void Main()
-        {
-            Application.EnableVisualStyles();
-            Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new Form1());
-        }
+    .glow {
+      text-shadow: 0 0 10px #0ff, 0 0 20px #0ff;
     }
-}
+    .glass {
+      backdrop-filter: blur(12px);
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+  </style>
+</head>
+<body class="text-white flex flex-col items-center min-h-screen px-4">
+
+  <!-- Header -->
+  <header class="text-center mt-10 mb-12">
+    <h1 class="text-4xl md:text-6xl font-bold glow">🚀 Jhon Gilmer Mamani Apaza</h1>
+    <p class="text-cyan-400 mt-2 text-lg">Estadística e Informática | FINESI 2025</p>
+  </header>
+
+  <!-- Card principal -->
+  <div class="glass p-10 rounded-2xl shadow-xl max-w-4xl w-full">
+    <!-- Presentación -->
+    <section class="mb-10 text-center">
+      <h2 class="text-2xl font-semibold text-cyan-300 mb-3">👨‍💻 Sobre mí</h2>
+      <p class="text-slate-300">
+        Soy estudiante de Estadística e Informática en la Universidad Nacional del Altiplano. 
+        Me apasiona el desarrollo de software, la inteligencia de datos y el diseño de soluciones innovadoras. 
+        Este portafolio refleja mi aprendizaje, proyectos y visión futurista.
+      </p>
+    </section>
+
+    <!-- Habilidades -->
+    <section class="mb-10">
+      <h2 class="text-2xl font-semibold text-cyan-300 mb-6 text-center">⚡ Habilidades</h2>
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
+        <div class="p-4 rounded-xl glass hover:scale-105 transition">
+          <p class="text-3xl">💻</p>
+          <p class="mt-2 text-sm">Programación (Python, C++)</p>
+        </div>
+        <div class="p-4 rounded-xl glass hover:scale-105 transition">
+          <p class="text-3xl">📊</p>
+          <p class="mt-2 text-sm">Estadística y Datos</p>
+        </div>
+        <div class="p-4 rounded-xl glass hover:scale-105 transition">
+          <p class="text-3xl">🌐</p>
+          <p class="mt-2 text-sm">Desarrollo Web</p>
+        </div>
+        <div class="p-4 rounded-xl glass hover:scale-105 transition">
+          <p class="text-3xl">🤖</p>
+          <p class="mt-2 text-sm">IA & Machine Learning</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Proyectos -->
+    <section>
+      <h2 class="text-2xl font-semibold text-cyan-300 mb-6 text-center">🚀 Proyectos</h2>
+      <div class="grid md:grid-cols-2 gap-6">
+        <!-- Proyecto 1 -->
+        <div class="glass p-6 rounded-xl hover:scale-105 transition">
+          <h3 class="text-xl font-bold text-cyan-200 mb-2">📂 Portafolio</h3>
+          <p class="text-slate-300 mb-4">Repositorio con mis trabajos académicos y proyectos personales.</p>
+          <a href="https://jhongilmermma.github.io/jhon-portafolio-mm/" target="_blank"
+             class="text-cyan-400 font-semibold hover:text-cyan-200">🔗 Ver proyecto</a>
+        </div>
+        <!-- Proyecto 2 -->
+        <div class="glass p-6 rounded-xl hover:scale-105 transition">
+          <h3 class="text-xl font-bold text-cyan-200 mb-2">📊 DSS & MIS</h3>
+          <p class="text-slate-300 mb-4">Modelos de soporte a decisiones aplicados en la gestión académica y empresarial.</p>
+          <a href="#" class="text-cyan-400 font-semibold hover:text-cyan-200">🔗 Ver proyecto</a>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <!-- Footer -->
+  <footer class="mt-12 mb-6 text-slate-400 text-sm text-center">
+    © 2025 | Diseñado con 💻 y ⚡ Futurismo
+  </footer>
+
+</body>
+</html>
+
