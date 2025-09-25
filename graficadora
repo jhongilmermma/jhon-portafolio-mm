@@ -1,0 +1,571 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Graficador de Funciones Matemáticas</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(45deg, #2196F3, #21CBF3);
+            color: white;
+            text-align: center;
+            padding: 30px;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
+        .controls {
+            background: #f8f9fa;
+            padding: 30px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .control-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .control-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .control-group label {
+            font-weight: 600;
+            color: #333;
+            min-width: 80px;
+        }
+
+        .function-input {
+            padding: 12px 15px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+            width: 250px;
+            transition: all 0.3s ease;
+        }
+
+        .function-input:focus {
+            border-color: #2196F3;
+            box-shadow: 0 0 0 3px rgba(33, 150, 243, 0.1);
+            outline: none;
+        }
+
+        .range-input {
+            padding: 10px 12px;
+            border: 2px solid #ddd;
+            border-radius: 6px;
+            font-size: 14px;
+            width: 80px;
+            text-align: center;
+        }
+
+        .range-input:focus {
+            border-color: #2196F3;
+            outline: none;
+        }
+
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .checkbox-group input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+        }
+
+        .btn {
+            padding: 12px 25px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(45deg, #2196F3, #21CBF3);
+            color: white;
+            box-shadow: 0 4px 15px rgba(33, 150, 243, 0.3);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(33, 150, 243, 0.4);
+        }
+
+        .btn-secondary {
+            background: linear-gradient(45deg, #ff6b6b, #ee5a5a);
+            color: white;
+            box-shadow: 0 4px 15px rgba(255, 107, 107, 0.3);
+        }
+
+        .btn-secondary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(255, 107, 107, 0.4);
+        }
+
+        .graph-container {
+            padding: 30px;
+            background: white;
+        }
+
+        #canvas {
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            width: 100%;
+            height: 600px;
+            background: white;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .legend {
+            display: flex;
+            gap: 30px;
+            justify-content: center;
+            margin-top: 20px;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 8px;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 600;
+        }
+
+        .legend-color {
+            width: 30px;
+            height: 4px;
+            border-radius: 2px;
+        }
+
+        .function1-color { background: #ff4444; }
+        .function2-color { background: #4444ff; }
+
+        .examples {
+            background: #e3f2fd;
+            padding: 20px;
+            margin-top: 20px;
+            border-radius: 8px;
+            border-left: 4px solid #2196F3;
+        }
+
+        .examples h3 {
+            color: #1976D2;
+            margin-bottom: 10px;
+        }
+
+        .examples p {
+            color: #424242;
+            line-height: 1.6;
+        }
+
+        .error-message {
+            background: #ffebee;
+            color: #c62828;
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 4px solid #f44336;
+            margin-top: 20px;
+            display: none;
+        }
+
+        @media (max-width: 768px) {
+            .control-row {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            
+            .function-input {
+                width: 100%;
+            }
+            
+            #canvas {
+                height: 400px;
+            }
+            
+            .legend {
+                flex-direction: column;
+                gap: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📊 Graficador de Funciones</h1>
+            <p>Visualiza funciones matemáticas de forma interactiva</p>
+        </div>
+
+        <div class="controls">
+            <div class="control-row">
+                <div class="control-group">
+                    <label>Función 1:</label>
+                    <input type="text" id="funcion1" class="function-input" value="x^2" placeholder="Ej: x^2, sin(x), log(x)">
+                </div>
+                <div class="checkbox-group">
+                    <input type="checkbox" id="check1" checked>
+                    <label for="check1">Graficar F1</label>
+                </div>
+            </div>
+
+            <div class="control-row">
+                <div class="control-group">
+                    <label>Función 2:</label>
+                    <input type="text" id="funcion2" class="function-input" value="sin(x)" placeholder="Ej: cos(x), 2*x+1, sqrt(x)">
+                </div>
+                <div class="checkbox-group">
+                    <input type="checkbox" id="check2" checked>
+                    <label for="check2">Graficar F2</label>
+                </div>
+            </div>
+
+            <div class="control-row">
+                <div class="control-group">
+                    <label>Rango X:</label>
+                    <input type="number" id="xmin" class="range-input" value="-10" step="0.1">
+                    <span>hasta</span>
+                    <input type="number" id="xmax" class="range-input" value="10" step="0.1">
+                </div>
+                <div class="control-group">
+                    <label>Rango Y:</label>
+                    <input type="number" id="ymin" class="range-input" value="-10" step="0.1">
+                    <span>hasta</span>
+                    <input type="number" id="ymax" class="range-input" value="10" step="0.1">
+                </div>
+            </div>
+
+            <div class="control-row">
+                <button class="btn btn-primary" onclick="graficar()">🚀 Graficar</button>
+                <button class="btn btn-secondary" onclick="limpiar()">🗑️ Limpiar</button>
+            </div>
+        </div>
+
+        <div class="graph-container">
+            <canvas id="canvas"></canvas>
+            
+            <div class="legend">
+                <div class="legend-item">
+                    <div class="legend-color function1-color"></div>
+                    <span id="legend1">f(x) = x²</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color function2-color"></div>
+                    <span id="legend2">g(x) = sin(x)</span>
+                </div>
+            </div>
+
+            <div class="examples">
+                <h3>💡 Ejemplos de funciones:</h3>
+                <p>
+                    <strong>Básicas:</strong> x^2, x^3, 2*x+1, -x+5<br>
+                    <strong>Trigonométricas:</strong> sin(x), cos(x), tan(x)<br>
+                    <strong>Logarítmicas:</strong> log(x), ln(x)<br>
+                    <strong>Otras:</strong> sqrt(x), abs(x), exp(x)<br>
+                    <strong>Constantes:</strong> pi ≈ 3.14159, e ≈ 2.71828
+                </p>
+            </div>
+
+            <div class="error-message" id="errorMsg"></div>
+        </div>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+        
+        // Ajustar el canvas al tamaño del contenedor
+        function resizeCanvas() {
+            const container = canvas.parentElement;
+            canvas.width = container.clientWidth - 60;
+            canvas.height = 600;
+        }
+
+        window.addEventListener('resize', () => {
+            resizeCanvas();
+            graficar();
+        });
+
+        resizeCanvas();
+
+        function showError(message) {
+            const errorDiv = document.getElementById('errorMsg');
+            errorDiv.textContent = message;
+            errorDiv.style.display = 'block';
+            setTimeout(() => {
+                errorDiv.style.display = 'none';
+            }, 5000);
+        }
+
+        function evaluarFuncion(expresion, x) {
+            try {
+                // Reemplazar x con el valor
+                let expr = expresion.toLowerCase().replace(/x/g, x.toString());
+                
+                // Reemplazar funciones matemáticas
+                expr = expr.replace(/sin\(/g, 'Math.sin(');
+                expr = expr.replace(/cos\(/g, 'Math.cos(');
+                expr = expr.replace(/tan\(/g, 'Math.tan(');
+                expr = expr.replace(/log\(/g, 'Math.log10(');
+                expr = expr.replace(/ln\(/g, 'Math.log(');
+                expr = expr.replace(/sqrt\(/g, 'Math.sqrt(');
+                expr = expr.replace(/abs\(/g, 'Math.abs(');
+                expr = expr.replace(/exp\(/g, 'Math.exp(');
+                
+                // Reemplazar constantes
+                expr = expr.replace(/pi/g, Math.PI.toString());
+                expr = expr.replace(/e/g, Math.E.toString());
+                
+                // Manejar potencias x^n
+                expr = expr.replace(/([0-9.]+|\([^)]+\))\^([0-9.]+|\([^)]+\))/g, 'Math.pow($1,$2)');
+                expr = expr.replace(/([a-zA-Z.]+)\^([0-9.]+|\([^)]+\))/g, 'Math.pow($1,$2)');
+                
+                // Evaluar la expresión
+                const result = eval(expr);
+                return isFinite(result) ? result : NaN;
+            } catch (e) {
+                return NaN;
+            }
+        }
+
+        function dibujarEjes(xMin, xMax, yMin, yMax) {
+            const width = canvas.width;
+            const height = canvas.height;
+
+            ctx.strokeStyle = '#333';
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+
+            // Eje X (y = 0)
+            if (yMin <= 0 && yMax >= 0) {
+                const yPos = height - (0 - yMin) / (yMax - yMin) * height;
+                ctx.moveTo(0, yPos);
+                ctx.lineTo(width, yPos);
+            }
+
+            // Eje Y (x = 0)
+            if (xMin <= 0 && xMax >= 0) {
+                const xPos = (0 - xMin) / (xMax - xMin) * width;
+                ctx.moveTo(xPos, 0);
+                ctx.lineTo(xPos, height);
+            }
+
+            ctx.stroke();
+        }
+
+        function dibujarCuadricula(xMin, xMax, yMin, yMax) {
+            const width = canvas.width;
+            const height = canvas.height;
+
+            ctx.strokeStyle = '#e0e0e0';
+            ctx.lineWidth = 1;
+            ctx.beginPath();
+
+            // Líneas verticales
+            const stepX = (xMax - xMin) / 20;
+            for (let x = xMin; x <= xMax; x += stepX) {
+                const xPos = (x - xMin) / (xMax - xMin) * width;
+                ctx.moveTo(xPos, 0);
+                ctx.lineTo(xPos, height);
+            }
+
+            // Líneas horizontales
+            const stepY = (yMax - yMin) / 20;
+            for (let y = yMin; y <= yMax; y += stepY) {
+                const yPos = height - (y - yMin) / (yMax - yMin) * height;
+                ctx.moveTo(0, yPos);
+                ctx.lineTo(width, yPos);
+            }
+
+            ctx.stroke();
+        }
+
+        function dibujarFuncion(expresion, xMin, xMax, yMin, yMax, color, lineWidth = 3) {
+            const width = canvas.width;
+            const height = canvas.height;
+            const step = (xMax - xMin) / width;
+
+            ctx.strokeStyle = color;
+            ctx.lineWidth = lineWidth;
+            ctx.beginPath();
+
+            let moveTo = true;
+            let puntosValidos = 0;
+
+            for (let x = xMin; x <= xMax; x += step) {
+                const y = evaluarFuncion(expresion, x);
+
+                if (!isNaN(y) && isFinite(y) && y >= yMin && y <= yMax) {
+                    const xPos = (x - xMin) / (xMax - xMin) * width;
+                    const yPos = height - (y - yMin) / (yMax - yMin) * height;
+
+                    if (moveTo) {
+                        ctx.moveTo(xPos, yPos);
+                        moveTo = false;
+                    } else {
+                        ctx.lineTo(xPos, yPos);
+                    }
+                    puntosValidos++;
+                } else {
+                    moveTo = true;
+                    if (puntosValidos > 1) {
+                        ctx.stroke();
+                        ctx.beginPath();
+                    }
+                }
+            }
+
+            if (puntosValidos > 1) {
+                ctx.stroke();
+            }
+        }
+
+        function dibujarEtiquetas(xMin, xMax, yMin, yMax) {
+            const width = canvas.width;
+            const height = canvas.height;
+
+            ctx.fillStyle = '#666';
+            ctx.font = '12px Arial';
+            ctx.textAlign = 'center';
+
+            // Etiquetas del eje X
+            const stepX = (xMax - xMin) / 10;
+            for (let x = xMin; x <= xMax; x += stepX) {
+                if (Math.abs(x) > 0.01 || x === 0) {
+                    const xPos = (x - xMin) / (xMax - xMin) * width;
+                    const yPos = yMin <= 0 && yMax >= 0 ? 
+                        height - (0 - yMin) / (yMax - yMin) * height + 15 : 
+                        height - 10;
+                    ctx.fillText(x.toFixed(1), xPos, yPos);
+                }
+            }
+
+            // Etiquetas del eje Y
+            ctx.textAlign = 'left';
+            const stepY = (yMax - yMin) / 10;
+            for (let y = yMin; y <= yMax; y += stepY) {
+                if (Math.abs(y) > 0.01 || y === 0) {
+                    const yPos = height - (y - yMin) / (yMax - yMin) * height + 4;
+                    const xPos = xMin <= 0 && xMax >= 0 ? 
+                        (0 - xMin) / (xMax - xMin) * width + 5 : 
+                        5;
+                    ctx.fillText(y.toFixed(1), xPos, yPos);
+                }
+            }
+        }
+
+        function graficar() {
+            try {
+                const xMin = parseFloat(document.getElementById('xmin').value);
+                const xMax = parseFloat(document.getElementById('xmax').value);
+                const yMin = parseFloat(document.getElementById('ymin').value);
+                const yMax = parseFloat(document.getElementById('ymax').value);
+
+                if (xMin >= xMax || yMin >= yMax) {
+                    showError('Los valores mínimos deben ser menores que los máximos');
+                    return;
+                }
+
+                // Limpiar canvas
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+                // Dibujar cuadrícula
+                dibujarCuadricula(xMin, xMax, yMin, yMax);
+
+                // Dibujar ejes
+                dibujarEjes(xMin, xMax, yMin, yMax);
+
+                // Dibujar etiquetas
+                dibujarEtiquetas(xMin, xMax, yMin, yMax);
+
+                // Graficar funciones
+                const funcion1 = document.getElementById('funcion1').value.trim();
+                const funcion2 = document.getElementById('funcion2').value.trim();
+                const check1 = document.getElementById('check1').checked;
+                const check2 = document.getElementById('check2').checked;
+
+                if (check1 && funcion1) {
+                    dibujarFuncion(funcion1, xMin, xMax, yMin, yMax, '#ff4444');
+                    document.getElementById('legend1').textContent = `f(x) = ${funcion1}`;
+                }
+
+                if (check2 && funcion2) {
+                    dibujarFuncion(funcion2, xMin, xMax, yMin, yMax, '#4444ff');
+                    document.getElementById('legend2').textContent = `g(x) = ${funcion2}`;
+                }
+
+            } catch (error) {
+                showError('Error al graficar: ' + error.message);
+            }
+        }
+
+        function limpiar() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+        }
+
+        // Graficar automáticamente al cambiar valores
+        document.addEventListener('DOMContentLoaded', () => {
+            graficar();
+            
+            // Auto-graficar cuando cambian los inputs
+            const inputs = ['funcion1', 'funcion2', 'xmin', 'xmax', 'ymin', 'ymax', 'check1', 'check2'];
+            inputs.forEach(id => {
+                document.getElementById(id).addEventListener('input', graficar);
+                document.getElementById(id).addEventListener('change', graficar);
+            });
+        });
+
+        // Permitir Enter para graficar
+        document.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                graficar();
+            }
+        });
+    </script>
+</body>
+</html>
