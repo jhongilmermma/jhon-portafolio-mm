@@ -2,6 +2,7 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Portafolio Futurista - Jhon Gilmer</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
@@ -16,16 +17,27 @@
       background: rgba(255, 255, 255, 0.08);
       border: 1px solid rgba(255, 255, 255, 0.2);
     }
+    .file-upload-area {
+      border: 2px dashed rgba(6, 182, 212, 0.5);
+      transition: all 0.3s ease;
+    }
+    .file-upload-area:hover {
+      border-color: rgba(6, 182, 212, 1);
+      background: rgba(6, 182, 212, 0.1);
+    }
+    .file-item {
+      background: rgba(6, 182, 212, 0.15);
+      border-left: 3px solid #06b6d4;
+    }
   </style>
 </head>
 <body class="text-white flex flex-col items-center min-h-screen px-4">
-
   <!-- Header -->
   <header class="text-center mt-10 mb-12">
     <h1 class="text-4xl md:text-6xl font-bold glow">🚀 Jhon Gilmer Mamani Apaza</h1>
     <p class="text-cyan-400 mt-2 text-lg">Estadística e Informática | FINESI 2025</p>
   </header>
-
+  
   <!-- Card principal -->
   <div class="glass p-10 rounded-2xl shadow-xl max-w-4xl w-full">
     <!-- Presentación -->
@@ -37,7 +49,7 @@
         Este portafolio refleja mi aprendizaje, proyectos y visión futurista.
       </p>
     </section>
-
+    
     <!-- Habilidades -->
     <section class="mb-10">
       <h2 class="text-2xl font-semibold text-cyan-300 mb-6 text-center">⚡ Habilidades</h2>
@@ -60,33 +72,131 @@
         </div>
       </div>
     </section>
-
+    
     <!-- Proyectos -->
     <section>
       <h2 class="text-2xl font-semibold text-cyan-300 mb-6 text-center">🚀 Proyectos</h2>
       <div class="grid md:grid-cols-2 gap-6">
-        <!-- Proyecto 1 -->
+        <!-- Unidad 1 -->
         <div class="glass p-6 rounded-xl hover:scale-105 transition">
-          <h3 class="text-xl font-bold text-cyan-200 mb-2">📂 Portafolio</h3>
-          <p class="text-slate-300 mb-4">Repositorio con mis trabajos académicos y proyectos personales.</p>
-          <!-- Enlace cambiado a tu archivo local -->
-          <a href="file:///C:/programacion%20numerica/Untitled-1.html" target="_blank"
-             class="text-cyan-400 font-semibold hover:text-cyan-200">🔗 Ver proyecto</a>
+          <h3 class="text-xl font-bold text-cyan-200 mb-2">📂 Unidad 1</h3>
+          <p class="text-slate-300 mb-4">Trabajos y proyectos de la primera unidad</p>
+          
+          <!-- Área de carga de archivos -->
+          <div class="file-upload-area rounded-lg p-4 mb-4 text-center cursor-pointer" 
+               onclick="document.getElementById('file-input-1').click()">
+            <p class="text-sm text-cyan-300">📤 Click para subir archivos</p>
+            <input type="file" id="file-input-1" multiple class="hidden" onchange="handleFiles(event, 'unit1')">
+          </div>
+          
+          <!-- Lista de archivos -->
+          <div id="file-list-unit1" class="space-y-2 max-h-40 overflow-y-auto"></div>
         </div>
-        <!-- Proyecto 2 -->
+        
+        <!-- Unidad 2 -->
         <div class="glass p-6 rounded-xl hover:scale-105 transition">
-          <h3 class="text-xl font-bold text-cyan-200 mb-2">📊 DSS & MIS</h3>
-          <p class="text-slate-300 mb-4">Modelos de soporte a decisiones aplicados en la gestión académica y empresarial.</p>
-          <a href="#" class="text-cyan-400 font-semibold hover:text-cyan-200">🔗 Ver proyecto</a>
+          <h3 class="text-xl font-bold text-cyan-200 mb-2">📊 Unidad 2</h3>
+          <p class="text-slate-300 mb-4">Trabajos y proyectos de la segunda unidad</p>
+          
+          <!-- Área de carga de archivos -->
+          <div class="file-upload-area rounded-lg p-4 mb-4 text-center cursor-pointer"
+               onclick="document.getElementById('file-input-2').click()">
+            <p class="text-sm text-cyan-300">📤 Click para subir archivos</p>
+            <input type="file" id="file-input-2" multiple class="hidden" onchange="handleFiles(event, 'unit2')">
+          </div>
+          
+          <!-- Lista de archivos -->
+          <div id="file-list-unit2" class="space-y-2 max-h-40 overflow-y-auto"></div>
         </div>
       </div>
     </section>
   </div>
-
+  
   <!-- Footer -->
   <footer class="mt-12 mb-6 text-slate-400 text-sm text-center">
     © 2025 | Diseñado con 💻 y ⚡ Futurismo
   </footer>
 
+  <script>
+    // Objeto para almacenar archivos por unidad
+    const filesStorage = {
+      unit1: [],
+      unit2: []
+    };
+
+    function handleFiles(event, unit) {
+      const files = Array.from(event.target.files);
+      const fileListDiv = document.getElementById(`file-list-${unit}`);
+      
+      files.forEach(file => {
+        // Agregar archivo al almacenamiento
+        filesStorage[unit].push({
+          name: file.name,
+          size: file.size,
+          type: file.type,
+          lastModified: file.lastModified
+        });
+        
+        // Crear elemento visual para el archivo
+        const fileItem = document.createElement('div');
+        fileItem.className = 'file-item p-3 rounded-lg flex items-center justify-between';
+        
+        const fileInfo = document.createElement('div');
+        fileInfo.className = 'flex items-center gap-2 flex-1 min-w-0';
+        
+        const icon = getFileIcon(file.type);
+        const fileName = document.createElement('span');
+        fileName.className = 'text-sm text-slate-200 truncate';
+        fileName.textContent = file.name;
+        
+        const fileSize = document.createElement('span');
+        fileSize.className = 'text-xs text-slate-400';
+        fileSize.textContent = formatFileSize(file.size);
+        
+        fileInfo.appendChild(document.createTextNode(icon + ' '));
+        fileInfo.appendChild(fileName);
+        
+        const removeBtn = document.createElement('button');
+        removeBtn.className = 'text-red-400 hover:text-red-300 text-sm ml-2';
+        removeBtn.textContent = '🗑️';
+        removeBtn.onclick = () => removeFile(unit, file.name, fileItem);
+        
+        fileItem.appendChild(fileInfo);
+        fileItem.appendChild(fileSize);
+        fileItem.appendChild(removeBtn);
+        
+        fileListDiv.appendChild(fileItem);
+      });
+      
+      // Limpiar input
+      event.target.value = '';
+    }
+
+    function removeFile(unit, fileName, element) {
+      // Remover del almacenamiento
+      filesStorage[unit] = filesStorage[unit].filter(f => f.name !== fileName);
+      // Remover del DOM
+      element.remove();
+    }
+
+    function getFileIcon(fileType) {
+      if (fileType.includes('pdf')) return '📄';
+      if (fileType.includes('image')) return '🖼️';
+      if (fileType.includes('video')) return '🎥';
+      if (fileType.includes('word') || fileType.includes('document')) return '📝';
+      if (fileType.includes('excel') || fileType.includes('sheet')) return '📊';
+      if (fileType.includes('powerpoint') || fileType.includes('presentation')) return '📽️';
+      if (fileType.includes('zip') || fileType.includes('rar')) return '📦';
+      return '📎';
+    }
+
+    function formatFileSize(bytes) {
+      if (bytes === 0) return '0 Bytes';
+      const k = 1024;
+      const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+      const i = Math.floor(Math.log(bytes) / Math.log(k));
+      return Math.round(bytes / Math.pow(k, i) * 100) / 100 + ' ' + sizes[i];
+    }
+  </script>
 </body>
 </html>
