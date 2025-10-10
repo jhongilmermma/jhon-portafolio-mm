@@ -3,116 +3,694 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Portafolio Futurista - Jhon Gilmer</title>
+  <title>Jhon Gilmer Mamani - Professional Portfolio</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+    
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
     body {
-      background: radial-gradient(circle at top left, #0f172a, #020617);
+      font-family: 'Inter', sans-serif;
+      background: #0a0a0a;
+      color: #ffffff;
+      overflow-x: hidden;
     }
-    .glow {
-      text-shadow: 0 0 10px #0ff, 0 0 20px #0ff;
+    
+    .grain {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      opacity: 0.03;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+      z-index: 1;
     }
-    .glass {
-      backdrop-filter: blur(12px);
-      background: rgba(255, 255, 255, 0.08);
-      border: 1px solid rgba(255, 255, 255, 0.2);
+    
+    .gradient-bg {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: 
+        radial-gradient(circle at 20% 20%, rgba(120, 119, 198, 0.15) 0%, transparent 50%),
+        radial-gradient(circle at 80% 80%, rgba(74, 86, 226, 0.15) 0%, transparent 50%),
+        radial-gradient(circle at 40% 60%, rgba(99, 102, 241, 0.1) 0%, transparent 50%);
+      z-index: 0;
     }
-    .file-item {
-      background: rgba(6, 182, 212, 0.15);
-      border-left: 3px solid #06b6d4;
+    
+    .content {
+      position: relative;
+      z-index: 2;
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 0 2rem;
     }
-    .lista-trabajos a {
-      color: #67e8f9;
+    
+    /* Navbar futurista */
+    .navbar {
+      position: fixed;
+      top: 2rem;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(17, 17, 17, 0.8);
+      backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 50px;
+      padding: 0.75rem 2rem;
+      display: flex;
+      gap: 2rem;
+      z-index: 100;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+    }
+    
+    .nav-item {
+      color: rgba(255, 255, 255, 0.6);
       text-decoration: none;
-      transition: color 0.2s ease;
+      font-size: 0.9rem;
+      font-weight: 500;
+      transition: color 0.3s;
+      position: relative;
     }
-    .lista-trabajos a:hover {
+    
+    .nav-item:hover {
+      color: rgba(255, 255, 255, 1);
+    }
+    
+    .nav-item::after {
+      content: '';
+      position: absolute;
+      bottom: -4px;
+      left: 0;
+      width: 0;
+      height: 2px;
+      background: linear-gradient(90deg, #6366f1, #8b5cf6);
+      transition: width 0.3s;
+    }
+    
+    .nav-item:hover::after {
+      width: 100%;
+    }
+    
+    /* Hero Section */
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      padding-top: 6rem;
+    }
+    
+    .hero-badge {
+      background: rgba(99, 102, 241, 0.1);
+      border: 1px solid rgba(99, 102, 241, 0.3);
+      padding: 0.5rem 1.5rem;
+      border-radius: 50px;
+      font-size: 0.875rem;
+      font-weight: 500;
+      color: #a5b4fc;
+      margin-bottom: 2rem;
+      display: inline-block;
+    }
+    
+    .hero-title {
+      font-size: clamp(3rem, 8vw, 6rem);
+      font-weight: 800;
+      line-height: 1.1;
+      margin-bottom: 1.5rem;
+      background: linear-gradient(135deg, #ffffff 0%, #a5b4fc 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      letter-spacing: -0.02em;
+    }
+    
+    .hero-subtitle {
+      font-size: clamp(1.2rem, 2.5vw, 1.5rem);
+      color: rgba(255, 255, 255, 0.6);
+      max-width: 600px;
+      margin: 0 auto 3rem;
+      line-height: 1.6;
+      font-weight: 400;
+    }
+    
+    .hero-cta {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+    
+    .btn-primary {
+      background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
       color: white;
+      padding: 1rem 2.5rem;
+      border-radius: 50px;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 1rem;
+      transition: all 0.3s;
+      border: none;
+      box-shadow: 0 4px 20px rgba(99, 102, 241, 0.4);
+    }
+    
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 30px rgba(99, 102, 241, 0.6);
+    }
+    
+    .btn-secondary {
+      background: rgba(255, 255, 255, 0.05);
+      color: white;
+      padding: 1rem 2.5rem;
+      border-radius: 50px;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 1rem;
+      transition: all 0.3s;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    
+    .btn-secondary:hover {
+      background: rgba(255, 255, 255, 0.1);
+      transform: translateY(-2px);
+    }
+    
+    /* Course Info Banner */
+    .course-banner {
+      background: linear-gradient(135deg, rgba(99, 102, 241, 0.15) 0%, rgba(139, 92, 246, 0.15) 100%);
+      border: 1px solid rgba(99, 102, 241, 0.3);
+      border-radius: 20px;
+      padding: 2rem;
+      margin: 4rem 0;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 2rem;
+      backdrop-filter: blur(10px);
+    }
+    
+    .course-item {
+      text-align: center;
+    }
+    
+    .course-label {
+      color: rgba(255, 255, 255, 0.5);
+      font-size: 0.875rem;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      margin-bottom: 0.5rem;
+    }
+    
+    .course-value {
+      color: white;
+      font-size: 1.25rem;
+      font-weight: 600;
+    }
+    
+    /* Section */
+    .section {
+      padding: 6rem 0;
+    }
+    
+    .section-header {
+      text-align: center;
+      margin-bottom: 4rem;
+    }
+    
+    .section-title {
+      font-size: clamp(2rem, 4vw, 3rem);
+      font-weight: 700;
+      margin-bottom: 1rem;
+      background: linear-gradient(135deg, #ffffff 0%, #a5b4fc 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    
+    .section-description {
+      color: rgba(255, 255, 255, 0.6);
+      font-size: 1.125rem;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+    
+    /* Stats Grid */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 2rem;
+      margin-bottom: 4rem;
+    }
+    
+    .stat-card {
+      background: rgba(17, 17, 17, 0.6);
+      backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 20px;
+      padding: 2.5rem;
+      text-align: center;
+      transition: all 0.3s;
+    }
+    
+    .stat-card:hover {
+      border-color: rgba(99, 102, 241, 0.5);
+      transform: translateY(-5px);
+      box-shadow: 0 10px 40px rgba(99, 102, 241, 0.2);
+    }
+    
+    .stat-number {
+      font-size: 3rem;
+      font-weight: 800;
+      background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 0.5rem;
+    }
+    
+    .stat-label {
+      color: rgba(255, 255, 255, 0.6);
+      font-size: 1rem;
+      font-weight: 500;
+    }
+    
+    /* Skills Grid */
+    .skills-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 1.5rem;
+    }
+    
+    .skill-card {
+      background: rgba(17, 17, 17, 0.6);
+      backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 16px;
+      padding: 2rem 1.5rem;
+      text-align: center;
+      transition: all 0.3s;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .skill-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(135deg, rgba(99, 102, 241, 0.1) 0%, rgba(139, 92, 246, 0.1) 100%);
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+    
+    .skill-card:hover::before {
+      opacity: 1;
+    }
+    
+    .skill-card:hover {
+      border-color: rgba(99, 102, 241, 0.5);
+      transform: translateY(-5px);
+    }
+    
+    .skill-icon {
+      font-size: 2.5rem;
+      margin-bottom: 1rem;
+      position: relative;
+      z-index: 1;
+    }
+    
+    .skill-name {
+      font-weight: 600;
+      color: white;
+      margin-bottom: 0.25rem;
+      position: relative;
+      z-index: 1;
+    }
+    
+    .skill-level {
+      font-size: 0.875rem;
+      color: rgba(255, 255, 255, 0.5);
+      position: relative;
+      z-index: 1;
+    }
+    
+    /* Projects */
+    .projects-grid {
+      display: grid;
+      gap: 2rem;
+    }
+    
+    .project-card {
+      background: rgba(17, 17, 17, 0.6);
+      backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 24px;
+      padding: 3rem;
+      transition: all 0.3s;
+    }
+    
+    .project-card:hover {
+      border-color: rgba(99, 102, 241, 0.5);
+      box-shadow: 0 20px 60px rgba(99, 102, 241, 0.15);
+    }
+    
+    .project-header {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+    
+    .project-icon {
+      font-size: 2.5rem;
+    }
+    
+    .project-title {
+      font-size: 1.75rem;
+      font-weight: 700;
+      color: white;
+    }
+    
+    .project-description {
+      color: rgba(255, 255, 255, 0.6);
+      line-height: 1.7;
+      margin-bottom: 2rem;
+    }
+    
+    .project-links {
+      background: rgba(0, 0, 0, 0.3);
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      border-radius: 16px;
+      padding: 2rem;
+    }
+    
+    .links-title {
+      font-size: 1rem;
+      font-weight: 600;
+      color: rgba(255, 255, 255, 0.8);
+      margin-bottom: 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    
+    .work-link {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      padding: 1rem 1.25rem;
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      border-radius: 12px;
+      color: rgba(255, 255, 255, 0.7);
+      text-decoration: none;
+      transition: all 0.3s;
+      margin-bottom: 0.75rem;
+    }
+    
+    .work-link:hover {
+      background: rgba(99, 102, 241, 0.1);
+      border-color: rgba(99, 102, 241, 0.3);
+      color: white;
+      transform: translateX(5px);
+    }
+    
+    .work-icon {
+      font-size: 1.25rem;
+    }
+    
+    .empty-state {
+      text-align: center;
+      padding: 3rem;
+      color: rgba(255, 255, 255, 0.4);
+    }
+    
+    .empty-icon {
+      font-size: 4rem;
+      margin-bottom: 1rem;
+      opacity: 0.5;
+    }
+    
+    /* Footer */
+    .footer {
+      text-align: center;
+      padding: 4rem 0;
+      border-top: 1px solid rgba(255, 255, 255, 0.05);
+      margin-top: 6rem;
+    }
+    
+    .footer-text {
+      color: rgba(255, 255, 255, 0.4);
+      font-size: 0.875rem;
+    }
+    
+    @media (max-width: 768px) {
+      .navbar {
+        top: 1rem;
+        padding: 0.5rem 1rem;
+        gap: 1rem;
+      }
+      
+      .nav-item {
+        font-size: 0.8rem;
+      }
+      
+      .hero {
+        padding-top: 5rem;
+      }
+      
+      .course-banner {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+      }
+      
+      .section {
+        padding: 4rem 0;
+      }
+      
+      .project-card {
+        padding: 2rem;
+      }
     }
   </style>
 </head>
-<body class="text-white flex flex-col items-center min-h-screen px-4">
-  <!-- Header -->
-  <header class="text-center mt-10 mb-12">
-    <h1 class="text-4xl md:text-6xl font-bold glow">🚀 Jhon Gilmer Mamani Apaza</h1>
-    <p class="text-cyan-400 mt-2 text-lg">Estadística e Informática | FINESI 2025</p>
-  </header>
+<body>
+  <div class="grain"></div>
+  <div class="gradient-bg"></div>
   
-  <!-- Card principal -->
-  <div class="glass p-10 rounded-2xl shadow-xl max-w-4xl w-full">
-    <!-- Presentación -->
-    <section class="mb-10 text-center">
-      <h2 class="text-2xl font-semibold text-cyan-300 mb-3">👨‍💻 Sobre mí</h2>
-      <p class="text-slate-300">
-        Soy estudiante de Estadística e Informática en la Universidad Nacional del Altiplano. 
-        Me apasiona el desarrollo de software, la inteligencia de datos y el diseño de soluciones innovadoras. 
-        Este portafolio refleja mi aprendizaje, proyectos y visión futurista.
+  <!-- Navbar -->
+  <nav class="navbar">
+    <a href="#home" class="nav-item">Inicio</a>
+    <a href="#about" class="nav-item">Sobre mí</a>
+    <a href="#skills" class="nav-item">Habilidades</a>
+    <a href="#projects" class="nav-item">Proyectos</a>
+  </nav>
+  
+  <div class="content">
+    <!-- Hero Section -->
+    <section id="home" class="hero">
+      <div class="hero-badge">✦ FINESI 2025</div>
+      <h1 class="hero-title">Jhon Gilmer<br>Mamani Apaza</h1>
+      <p class="hero-subtitle">
+        Estudiante de Estadística e Informática especializado en programación numérica 
+        y métodos computacionales avanzados
       </p>
+      <div class="hero-cta">
+        <a href="#projects" class="btn-primary">Ver Proyectos</a>
+        <a href="#about" class="btn-secondary">Conocer Más</a>
+      </div>
     </section>
     
-    <!-- Habilidades -->
-    <section class="mb-10">
-      <h2 class="text-2xl font-semibold text-cyan-300 mb-6 text-center">⚡ Habilidades</h2>
-      <div class="grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
-        <div class="p-4 rounded-xl glass hover:scale-105 transition">
-          <p class="text-3xl">💻</p>
-          <p class="mt-2 text-sm">Programación (Python, C++)</p>
+    <!-- Course Info Banner -->
+    <div class="course-banner">
+      <div class="course-item">
+        <div class="course-label">Curso</div>
+        <div class="course-value">Programación Numérica</div>
+      </div>
+      <div class="course-item">
+        <div class="course-label">Docente</div>
+        <div class="course-value">Prof. Torres Cruz Fred</div>
+      </div>
+      <div class="course-item">
+        <div class="course-label">Institución</div>
+        <div class="course-value">UNA Puno</div>
+      </div>
+    </div>
+    
+    <!-- About Section -->
+    <section id="about" class="section">
+      <div class="section-header">
+        <h2 class="section-title">Sobre mí</h2>
+        <p class="section-description">
+          Apasionado por la tecnología y el análisis de datos, busco aplicar soluciones 
+          innovadoras a problemas complejos mediante la estadística y la informática
+        </p>
+      </div>
+      
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-number">10+</div>
+          <div class="stat-label">Proyectos Completados</div>
         </div>
-        <div class="p-4 rounded-xl glass hover:scale-105 transition">
-          <p class="text-3xl">📊</p>
-          <p class="mt-2 text-sm">Estadística y Datos</p>
+        <div class="stat-card">
+          <div class="stat-number">5+</div>
+          <div class="stat-label">Tecnologías Dominadas</div>
         </div>
-        <div class="p-4 rounded-xl glass hover:scale-105 transition">
-          <p class="text-3xl">🌐</p>
-          <p class="mt-2 text-sm">Desarrollo Web</p>
-        </div>
-        <div class="p-4 rounded-xl glass hover:scale-105 transition">
-          <p class="text-3xl">🤖</p>
-          <p class="mt-2 text-sm">IA & Machine Learning</p>
+        <div class="stat-card">
+          <div class="stat-number">100%</div>
+          <div class="stat-label">Dedicación</div>
         </div>
       </div>
     </section>
     
-    <!-- Proyectos -->
-    <section>
-      <h2 class="text-2xl font-semibold text-cyan-300 mb-6 text-center">🚀 Proyectos</h2>
-      <div class="grid md:grid-cols-2 gap-6">
+    <!-- Skills Section -->
+    <section id="skills" class="section">
+      <div class="section-header">
+        <h2 class="section-title">Habilidades</h2>
+        <p class="section-description">
+          Tecnologías y metodologías que domino para crear soluciones efectivas
+        </p>
+      </div>
+      
+      <div class="skills-grid">
+        <div class="skill-card">
+          <div class="skill-icon">🐍</div>
+          <div class="skill-name">Python</div>
+          <div class="skill-level">Avanzado</div>
+        </div>
+        <div class="skill-card">
+          <div class="skill-icon">➕</div>
+          <div class="skill-name">C++</div>
+          <div class="skill-level">Intermedio</div>
+        </div>
+        <div class="skill-card">
+          <div class="skill-icon">📊</div>
+          <div class="skill-name">Estadística</div>
+          <div class="skill-level">Avanzado</div>
+        </div>
+        <div class="skill-card">
+          <div class="skill-icon">🔢</div>
+          <div class="skill-name">Métodos Numéricos</div>
+          <div class="skill-level">Avanzado</div>
+        </div>
+        <div class="skill-card">
+          <div class="skill-icon">🌐</div>
+          <div class="skill-name">Web Dev</div>
+          <div class="skill-level">Intermedio</div>
+        </div>
+        <div class="skill-card">
+          <div class="skill-icon">🤖</div>
+          <div class="skill-name">Machine Learning</div>
+          <div class="skill-level">Básico</div>
+        </div>
+        <div class="skill-card">
+          <div class="skill-icon">📈</div>
+          <div class="skill-name">Visualización</div>
+          <div class="skill-level">Avanzado</div>
+        </div>
+        <div class="skill-card">
+          <div class="skill-icon">⚙️</div>
+          <div class="skill-name">Optimización</div>
+          <div class="skill-level">Intermedio</div>
+        </div>
+      </div>
+    </section>
+    
+    <!-- Projects Section -->
+    <section id="projects" class="section">
+      <div class="section-header">
+        <h2 class="section-title">Proyectos Académicos</h2>
+        <p class="section-description">
+          Trabajos desarrollados en el curso de Programación Numérica
+        </p>
+      </div>
+      
+      <div class="projects-grid">
         <!-- Unidad 1 -->
-        <div class="glass p-6 rounded-xl hover:scale-105 transition">
-          <h3 class="text-xl font-bold text-cyan-200 mb-2">📂 Unidad 1</h3>
-          <p class="text-slate-300 mb-4">Trabajos y proyectos de la primera unidad</p>
+        <div class="project-card">
+          <div class="project-header">
+            <div class="project-icon">📁</div>
+            <div>
+              <h3 class="project-title">Unidad 1</h3>
+              <div style="color: rgba(255, 255, 255, 0.5); font-size: 0.875rem;">Métodos Fundamentales</div>
+            </div>
+          </div>
+          <p class="project-description">
+            Implementación de algoritmos numéricos básicos incluyendo métodos de aproximación, 
+            raíces de ecuaciones y graficación matemática. Enfoque en precisión y eficiencia computacional.
+          </p>
           
-          <!-- NUEVO: Lista de enlaces -->
-          <h2>📁 Trabajos realizados</h2>
-          <ol class="lista-trabajos list-decimal list-inside space-y-2 mt-2">
-            <li><a href="https://github.com/jhongilmermma/jhon-portafolio-mm/blob/main/identificador.py" target="_blank">1️⃣ identificardor</a></li>
-            <li><a href="https://github.com/jhongilmermma/jhon-portafolio-mm/edit/main/graficadora.py" target="_blank">2️⃣ graficador</a></li>
-            <li><a href="https://github.com/jhongilmermma/jhon-portafolio-mm/edit/main/ejercicios.py" target="_blank">3️⃣ ejercicios</a></li>
-            <li><a href="https://github.com/jhongilmermma/jhon-portafolio-mm/commit/c0338748d525ef8cc1e92b4b1441d2365763ee74" target="_blank">3️⃣ metodo new raphson</a></li>
-            <li><a href="https://jhongilmermma.github.io/jhon-portafolio-mm/metodo%20de%20Regula%20Falsi.html">3️⃣ metodo de regula fasi</a></li>
-          </ol>
+          <div class="project-links">
+            <div class="links-title">
+              <span>📂</span>
+              Trabajos Realizados
+            </div>
+            <a href="https://github.com/jhongilmermma/jhon-portafolio-mm/blob/main/identificador.py" target="_blank" class="work-link">
+              <span class="work-icon">🔍</span>
+              <span>Identificador de Sistemas</span>
+            </a>
+            <a href="https://github.com/jhongilmermma/jhon-portafolio-mm/edit/main/graficadora.py" target="_blank" class="work-link">
+              <span class="work-icon">📈</span>
+              <span>Graficador Matemático</span>
+            </a>
+            <a href="https://github.com/jhongilmermma/jhon-portafolio-mm/edit/main/ejercicios.py" target="_blank" class="work-link">
+              <span class="work-icon">📝</span>
+              <span>Ejercicios Numéricos</span>
+            </a>
+            <a href="https://github.com/jhongilmermma/jhon-portafolio-mm/commit/c0338748d525ef8cc1e92b4b1441d2365763ee74" target="_blank" class="work-link">
+              <span class="work-icon">🎯</span>
+              <span>Método de Newton-Raphson</span>
+            </a>
+            <a href="https://jhongilmermma.github.io/jhon-portafolio-mm/metodo%20de%20Regula%20Falsi.html" target="_blank" class="work-link">
+              <span class="work-icon">📐</span>
+              <span>Método de Regula Falsi</span>
+            </a>
+          </div>
         </div>
         
         <!-- Unidad 2 -->
-        <div class="glass p-6 rounded-xl hover:scale-105 transition">
-          <h3 class="text-xl font-bold text-cyan-200 mb-2">📊 Unidad 2</h3>
-          <p class="text-slate-300 mb-4">Trabajos y proyectos de la segunda unidad</p>
+        <div class="project-card">
+          <div class="project-header">
+            <div class="project-icon">📊</div>
+            <div>
+              <h3 class="project-title">Unidad 2</h3>
+              <div style="color: rgba(255, 255, 255, 0.5); font-size: 0.875rem;">Métodos Avanzados</div>
+            </div>
+          </div>
+          <p class="project-description">
+            Algoritmos avanzados de optimización, integración numérica y análisis de convergencia. 
+            Implementación de métodos iterativos y técnicas de aceleración.
+          </p>
           
-          <!-- NUEVO: Lista de enlaces -->
-          <h2>📁 Trabajos realizados</h2>
-          <ol class="lista-trabajos list-decimal list-inside space-y-2 mt-2">
-            <li><a href="https://github.com/tuusuario/proyecto4" target="_blank">1️⃣ VACIO</a></li>
-            
-          </ol>
+          <div class="project-links">
+            <div class="empty-state">
+              <div class="empty-icon">⏳</div>
+              <div style="font-size: 1.125rem; margin-bottom: 0.5rem;">En desarrollo</div>
+              <div style="font-size: 0.875rem;">Contenido próximamente disponible</div>
+            </div>
+          </div>
         </div>
       </div>
     </section>
+    
+    <!-- Footer -->
+    <footer class="footer">
+      <p class="footer-text">© 2025 Jhon Gilmer Mamani Apaza</p>
+      <p class="footer-text" style="margin-top: 0.5rem;">Portfolio Académico - Programación Numérica</p>
+    </footer>
   </div>
-  
-  <!-- Footer -->
-  <footer class="mt-12 mb-6 text-slate-400 text-sm text-center">
-    © 2025 | Diseñado con 💻 y ⚡ Futurismo
-  </footer>
 </body>
 </html>
 
