@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Exploración Espacial - Regula Falsi</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjs/11.8.0/math.js"></script>
+    <style>
+        body { background: radial-gradient(circle at center, #1e1b4b, #020617); color: white; font-family: 'Segoe UI', sans-serif; }
+        .glass { background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.1); }
+        input { background: rgba(0,0,0,0.3); border: 1px solid #4f46e5; color: white; }
+    </style>
+</head>
+<body class="min-h-screen flex items-center justify-center p-4">
+
+    <div class="glass p-8 rounded-3xl w-full max-w-5xl shadow-2xl border-t-4 border-purple-500">
+        <header class="text-center mb-8">
+            <h1 class="text-4xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-pink-500 to-violet-500">
+                🚀 EXPLORACIÓN ESPACIAL
+            </h1>
+            <p class="text-slate-400 mt-2">Calculadora de Trayectorias - Método Regula Falsi</p>
+        </header>
+
+        <div class="grid md:grid-cols-2 gap-8">
+            
+            <div class="space-y-6">
+                <div class="bg-slate-900/50 p-6 rounded-xl border border-indigo-500/30">
+                    <h3 class="text-xl font-semibold text-indigo-300 mb-4">🛸 Parámetros Orbitales</h3>
+                    
+                    <label class="block text-sm text-slate-400 mb-1">Función de Trayectoria f(x):</label>
+                    <input type="text" id="func" value="x^3 - 2*x - 5" class="w-full p-3 rounded-lg mb-4 focus:outline-none focus:border-pink-500 transition">
+
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-sm text-slate-400 mb-1">Límite A:</label>
+                            <input type="number" id="a" value="2" class="w-full p-3 rounded-lg">
+                        </div>
+                        <div>
+                            <label class="block text-sm text-slate-400 mb-1">Límite B:</label>
+                            <input type="number" id="b" value="3" class="w-full p-3 rounded-lg">
+                        </div>
+                    </div>
+
+                    <label class="block text-sm text-slate-400 mt-4 mb-1">Precisión (Tolerancia):</label>
+                    <input type="number" id="tol" value="0.001" step="0.0001" class="w-full p-3 rounded-lg mb-6">
+
+                    <button onclick="calcular()" class="w-full py-3 bg-gradient-to-r from-indigo-600 to-purple-600 rounded-lg font-bold hover:scale-105 transition shadow-lg shadow-indigo-500/20">
+                        INICIAR CÁLCULO
+                    </button>
+                </div>
+
+                <div id="resultado-box" class="hidden bg-green-900/20 border border-green-500/30 p-4 rounded-xl text-center">
+                    <p class="text-green-400 text-sm">Raíz Encontrada (Punto de Impacto):</p>
+                    <p class="text-3xl font-mono font-bold text-white mt-1" id="raiz-valor">0.0000</p>
+                    <p class="text-slate-400 text-xs mt-2" id="iteraciones">Iteraciones: 0</p>
+                </div>
+            </div>
+
+            <div class="bg-slate-900/80 p-4 rounded-xl border border-slate-700 flex items-center justify-center relative">
+                <canvas id="miGrafico"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let chartInstance = null;
+
+        function f(expr, x) {
+            return math.evaluate(expr, {x: x});
+        }
+
+        function calcular() {
+            try {
+                const expr = document.getElementById('func').value;
+                let a = parseFloat(document.getElementById('a').value);
+                let b = parseFloat(document.getElementById('b').value);
+                const tol = parseFloat(document.getElementById('tol').value);
+                let fa = f(expr, a);
+                let fb = f(expr, b);
+                
+                if (fa * fb >= 0) {
+                    alert("⚠️ El intervalo no es válido (f(a) y f(b) deben tener signos opuestos).");
+                    return;
+                }
+
+                let c = a;
+                let iter = 0;
+                let maxIter = 100;
+                let error = 1;
+
+                while (error > tol && iter < maxIter) {
+                    let prevC = c;
+                    c = (a * fb - b * fa) / (fb - fa);
+                    let fc = f(expr, c);
+
+                    if (fa * fc < 0) {
+                        b = c;
+                        fb = fc;
+                    } else {
+                        a = c;
+                        fa = fc;
+                    }
+                    
+                    error = Math.abs(c - prevC);
+                    iter++;
+                }
+
+                document.getElementById('resultado-box').classList.remove('hidden');
+                document.getElementById('raiz-valor').innerText = c.toFixed(6);
+                document.getElementById('iteraciones').innerText = `Iteraciones: ${iter} | Error: ${error.toFixed(6)}`;
+
+                dibujarGrafico(expr, parseFloat(document.getElementById('a').value), parseFloat(document.getElementById('b').value), c);
+
+            } catch (err) {
+                alert("Error en la función: " + err);
+            }
+        }
+
+        function dibujarGrafico(expr, start, end, root) {
+            const ctx = document.getElementById('miGrafico').getContext('2d');
+            const xValues = [];
+            const yValues = [];
+            
+            const range = end - start;
+            const step = range / 20;
+            const graphStart = start - 1;
+            const graphEnd = end + 1;
+
+            for (let x = graphStart; x <= graphEnd; x += 0.2) {
+                xValues.push(x.toFixed(1));
+                yValues.push(f(expr, x));
+            }
+
+            if (chartInstance) chartInstance.destroy();
+
+            chartInstance = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: xValues,
+                    datasets: [{
+                        label: 'Trayectoria f(x)',
+                        data: yValues,
+                        borderColor: '#a855f7',
+                        borderWidth: 2,
+                        pointRadius: 0,
+                        tension: 0.4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        annotation: {
+                            annotations: {
+                                point1: {
+                                    type: 'point',
+                                    xValue: root,
+                                    yValue: 0,
+                                    backgroundColor: 'red'
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        y: { grid: { color: '#334155' } },
+                        x: { grid: { color: '#334155' } }
+                    }
+                }
+            });
+        }
+    </script>
+</body>
+</html>
