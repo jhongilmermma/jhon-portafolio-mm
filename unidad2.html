@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Unidad 2 - Métodos Avanzados | Jhon Gilmer</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: #0a0a0a;
+      color: #ffffff;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Fondo animado */
+    .grain {
+      position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+      pointer-events: none; opacity: 0.03; z-index: 1;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+    }
+    
+    .gradient-bg {
+      position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 0;
+      background: radial-gradient(circle at 50% 0%, rgba(220, 38, 38, 0.15) 0%, transparent 70%); /* ROJO */
+    }
+
+    .container {
+      position: relative; z-index: 2;
+      max-width: 800px; margin: 0 auto; padding: 4rem 2rem;
+    }
+
+    /* Header */
+    .header { text-align: center; margin-bottom: 4rem; }
+    .unit-badge {
+      display: inline-block; padding: 0.5rem 1rem; border-radius: 9999px;
+      background: rgba(220, 38, 38, 0.1); border: 1px solid rgba(220, 38, 38, 0.2);
+      color: #fca5a5; font-size: 0.875rem; margin-bottom: 1rem;
+    }
+    .title {
+      font-size: clamp(2.5rem, 5vw, 4rem); font-weight: 800; letter-spacing: -0.02em;
+      background: linear-gradient(135deg, #ffffff 0%, #fca5a5 100%);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      margin-bottom: 1rem;
+    }
+    .subtitle { color: #9ca3af; font-size: 1.125rem; max-width: 600px; margin: 0 auto; }
+
+    /* Grid de Actividades */
+    .activities-grid {
+      display: grid; gap: 1.5rem;
+    }
+
+    .activity-card {
+      background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.05);
+      border-radius: 16px; padding: 1.5rem; text-decoration: none;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .activity-card:hover {
+      background: rgba(220, 38, 38, 0.05); border-color: rgba(220, 38, 38, 0.3);
+      transform: translateX(10px);
+    }
+
+    .card-content { display: flex; align-items: center; gap: 1rem; }
+    .card-number {
+      font-family: 'Courier New', monospace; font-weight: bold; color: #f87171;
+      background: rgba(220, 38, 38, 0.1); padding: 0.5rem; border-radius: 8px;
+    }
+    .card-title { color: #e5e7eb; font-weight: 500; font-size: 1.1rem; }
+    .arrow-icon { color: #525252; transition: color 0.3s; }
+    .activity-card:hover .arrow-icon { color: #f87171; }
+
+    .btn-back {
+      display: inline-block; margin-top: 3rem; text-decoration: none; color: #6b7280;
+      transition: color 0.2s; border: 1px solid rgba(255,255,255,0.1); padding: 10px 20px; border-radius: 8px;
+    }
+    .btn-back:hover { color: white; border-color: white; }
+  </style>
+</head>
+<body>
+  <div class="grain"></div>
+  <div class="gradient-bg"></div>
+
+  <div class="container">
+    <header class="header">
+      <div class="unit-badge">Unidad 2</div>
+      <h1 class="title">Métodos Avanzados</h1>
+      <p class="subtitle">Selecciona una actividad para ver el desarrollo, código y resultados.</p>
+    </header>
+
+    <div class="activities-grid">
+      <a href="indice_h.html" class="activity-card">
+        <div class="card-content">
+          <span class="card-number">6A</span>
+          <span class="card-title">Índice H (Scopus)</span>
+        </div>
+        <span class="arrow-icon">➜</span>
+      </a>
+
+      <a href="biseccion.html" class="activity-card">
+        <div class="card-content">
+          <span class="card-number">6B</span>
+          <span class="card-title">Método de Bisección</span>
+        </div>
+        <span class="arrow-icon">➜</span>
+      </a>
+      
+      </div>
+
+    <div style="text-align: center;">
+      <a href="index.html" class="btn-back">⬅ Volver al Inicio</a>
+    </div>
+  </div>
+</body>
+</html>
