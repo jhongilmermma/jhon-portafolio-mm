@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Actividad 6A - Índice H | Jhon Gilmer</title>
+  <style>
+    /* --- TUS ESTILOS BASE (Mismos que el resto del portafolio) --- */
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+    
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    
+    body {
+      font-family: 'Inter', sans-serif;
+      background: #0a0a0a;
+      color: #ffffff;
+      min-height: 100vh;
+      display: flex; flex-direction: column;
+    }
+    
+    .grain {
+      position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+      pointer-events: none; opacity: 0.03; z-index: 1;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+    }
+    
+    .gradient-bg {
+      position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 0;
+      background: radial-gradient(circle at 50% 0%, rgba(120, 119, 198, 0.2) 0%, transparent 70%);
+    }
+
+    .content {
+      position: relative; z-index: 2; max-width: 1000px;
+      margin: 0 auto; padding: 4rem 2rem;
+    }
+
+    .page-header { text-align: center; margin-bottom: 3rem; }
+    .page-title {
+      font-size: clamp(2rem, 4vw, 3rem); font-weight: 800;
+      background: linear-gradient(135deg, #ffffff 0%, #a5b4fc 100%);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      margin-bottom: 0.5rem;
+    }
+    .page-subtitle { color: #a5b4fc; font-weight: 500; }
+
+    /* Tarjeta de Vidrio */
+    .glass-card {
+      background: rgba(20, 20, 25, 0.7); backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 20px;
+      padding: 2.5rem; margin-bottom: 2rem;
+    }
+
+    h2 { color: #818cf8; margin-bottom: 1rem; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 0.5rem; }
+    p { color: #ccc; line-height: 1.6; margin-bottom: 1.5rem; }
+
+    /* --- ESTILOS DE LA TABLA (NUEVO) --- */
+    .data-table-container { overflow-x: auto; }
+    
+    .styled-table {
+      width: 100%; border-collapse: collapse; font-size: 0.95rem; margin-top: 1rem;
+    }
+    
+    .styled-table thead tr {
+      background-color: rgba(99, 102, 241, 0.15); color: #ffffff; text-align: left;
+    }
+    
+    .styled-table th, .styled-table td {
+      padding: 12px 15px; border-bottom: 1px solid rgba(255,255,255,0.05);
+    }
+    
+    .styled-table tbody tr { transition: background 0.3s; }
+    .styled-table tbody tr:hover { background-color: rgba(255, 255, 255, 0.05); }
+    
+    .highlight-num { color: #4ade80; font-weight: bold; } /* Verde para números altos */
+    .normal-num { color: #94a3b8; }
+
+    /* Botones */
+    .btn-container { display: flex; gap: 1rem; justify-content: center; margin-top: 3rem; flex-wrap: wrap; }
+    .btn {
+      padding: 0.8rem 1.5rem; border-radius: 10px; text-decoration: none; font-weight: 600;
+      transition: transform 0.2s; border: 1px solid rgba(255,255,255,0.1); display: flex; align-items: center; gap: 8px;
+    }
+    .btn:hover { transform: translateY(-3px); }
+    .btn-code { background: rgba(59, 130, 246, 0.15); color: #93c5fd; }
+    .btn-pdf { background: rgba(239, 68, 68, 0.15); color: #fca5a5; }
+    .btn-back { background: rgba(255, 255, 255, 0.05); color: #fff; }
+
+  </style>
+</head>
+<body>
+  <div class="grain"></div>
+  <div class="gradient-bg"></div>
+
+  <div class="content">
+    <header class="page-header">
+      <h1 class="page-title">Actividad 6A: Índice H</h1>
+      <div class="page-subtitle">Investigación Docente - Facultad de Estadística e Informática</div>
+    </header>
+
+    <div class="glass-card">
+      <h2>Descripción del Trabajo</h2>
+      <p>
+        El objetivo de esta actividad fue identificar a los docentes de la facultad y determinar su <strong>"índice h"</strong> y producción científica utilizando la base de datos de <em>Scopus</em>. El índice h es una métrica que mide tanto la productividad como el impacto de las citas de las publicaciones.
+      </p>
+      <p style="font-size: 0.9rem; color: #a5b4fc;">
+        Fuente de datos: Scopus y Directorio CTI Vitae (CONCYTEC).
+      </p>
+    </div>
+
+    <div class="glass-card">
+      <h2>Registro de Investigadores</h2>
+      
+      <div class="data-table-container">
+        <table class="styled-table">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Docente</th>
+              <th>Índice H</th>
+              <th>Documentos</th>
+              <th>Citas Totales</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>001</td> <td>Percy HUATA PANCA</td> <td class="normal-num">3</td> <td>8</td> <td>11</td>
+            </tr>
+            <tr>
+              <td>002</td> <td>Fred TORRES-CRUZ</td> <td class="highlight-num">4</td> <td>40</td> <td>0</td>
+            </tr>
+            <tr>
+              <td>003</td> <td>Elqui PARI CONDORI</td> <td class="normal-num">2</td> <td>4</td> <td>4</td>
+            </tr>
+            <tr>
+              <td>004</td> <td>José TITO LIPA</td> <td class="normal-num">2</td> <td>5</td> <td>7</td>
+            </tr>
+            <tr>
+              <td>005</td> <td>Remo CHOQUEJAHUA ACERO</td> <td class="highlight-num">4</td> <td>4</td> <td>10</td>
+            </tr>
+            <tr>
+              <td>006</td> <td>Vladimiro IBAÑEZ QUISPE</td> <td class="highlight-num">5</td> <td>21</td> <td>52</td>
+            </tr>
+            <tr>
+              <td>007</td> <td>Juan Carlos JUAREZ VARGAS</td> <td class="normal-num">1</td> <td>3</td> <td>8</td>
+            </tr>
+            <tr>
+              <td>008</td> <td>Milton LOPEZ CUEVA</td> <td class="normal-num">1</td> <td>6</td> <td>4</td>
+            </tr>
+            <tr>
+              <td>009</td> <td>Ernesto TUMI FIGUEROA</td> <td class="normal-num">3</td> <td>8</td> <td>23</td>
+            </tr>
+            <tr>
+              <td>010</td> <td>Romel P. MELGAREJO-BOLIVAR</td> <td class="normal-num">3</td> <td>3</td> <td>6</td>
+            </tr>
+            <tr>
+              <td>011</td> <td>Fredy VILLASANTE SARAVIA</td> <td class="normal-num">3</td> <td>9</td> <td>21</td>
+            </tr>
+            <tr>
+              <td>012</td> <td>Juan PAREDES QUISPE</td> <td class="normal-num">1</td> <td>0</td> <td>0</td>
+            </tr>
+            <tr>
+              <td>013</td> <td>Leonel COYLA DME</td> <td class="normal-num">1</td> <td>5</td> <td>8</td>
+            </tr>
+            <tr>
+              <td>014</td> <td>Charles MENDOZA MOLLOCON</td> <td class="normal-num">3</td> <td>8</td> <td>17</td>
+            </tr>
+            <tr>
+              <td>015</td> <td>Ángel Javier QUISPE CARITA</td> <td class="normal-num">1</td> <td>8</td> <td>9</td>
+            </tr>
+            <tr>
+              <td>016</td> <td>Alejandro APAZA TARQUI</td> <td class="normal-num">1</td> <td>3</td> <td>4</td>
+            </tr>
+            <tr>
+              <td>017</td> <td>Bernabé CANQUI FLORES</td> <td class="normal-num">2</td> <td>9</td> <td>20</td>
+            </tr>
+            <tr>
+              <td>018</td> <td>Edgar Eloy CARPIO VARGAS</td> <td class="normal-num">3</td> <td>8</td> <td>27</td>
+            </tr>
+            <tr>
+              <td>019</td> <td>Leonid ALEMÁN GONZALES</td> <td class="normal-num">2</td> <td>4</td> <td>14</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="btn-container">
+      <a href="jhon trabajos encargados.pdf" target="_blank" class="btn btn-pdf">
+         📄 Ver Documento Original
+      </a>
+
+      <a href="https://github.com/jhongilmermma/jhon-portafolio-mm/blob/main/indice_h.py" target="_blank" class="btn btn-code">
+         🐍 Ver Algoritmo Python
+      </a>
+      
+      <a href="index.html" class="btn btn-back">⬅ Volver al Inicio</a>
+    </div>
+
+  </div>
+</body>
+</html>
