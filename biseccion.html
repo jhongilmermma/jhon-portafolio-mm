@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Actividad 6B - Código Bisección | Jhon Gilmer</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+    
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    
+    body {
+      font-family: 'Inter', sans-serif;
+      background: #0a0a0a;
+      color: #ffffff;
+      min-height: 100vh;
+      display: flex; flex-direction: column;
+    }
+    
+    /* Fondo animado */
+    .grain {
+      position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+      pointer-events: none; opacity: 0.03; z-index: 1;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+    }
+    
+    .gradient-bg {
+      position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 0;
+      background: radial-gradient(circle at 80% 0%, rgba(59, 130, 246, 0.15) 0%, transparent 50%);
+    }
+
+    .content {
+      position: relative; z-index: 2; max-width: 900px;
+      margin: 0 auto; padding: 4rem 2rem;
+    }
+
+    .page-header { text-align: center; margin-bottom: 3rem; }
+    .page-title {
+      font-size: clamp(2rem, 4vw, 3rem); font-weight: 800;
+      background: linear-gradient(135deg, #ffffff 0%, #60a5fa 100%);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      margin-bottom: 0.5rem;
+    }
+
+    /* Tarjetas */
+    .glass-card {
+      background: rgba(20, 25, 30, 0.7); backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 20px;
+      padding: 2.5rem; margin-bottom: 2rem;
+      position: relative;
+    }
+
+    h2 { color: #60a5fa; margin-bottom: 1rem; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 0.5rem; }
+    p { color: #ccc; line-height: 1.6; margin-bottom: 1rem; }
+
+    /* Bloque de Código */
+    .code-container {
+      position: relative;
+      background: #111827;
+      border-radius: 12px;
+      padding: 1.5rem;
+      border: 1px solid rgba(255,255,255,0.1);
+      overflow-x: auto;
+    }
+
+    pre { margin: 0; }
+    code {
+      font-family: 'Courier New', monospace;
+      color: #e5e7eb;
+      font-size: 0.9rem;
+      line-height: 1.5;
+    }
+
+    /* Botón Copiar */
+    .btn-copy {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      color: #fff;
+      padding: 5px 12px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 0.8rem;
+      transition: all 0.2s;
+    }
+    .btn-copy:hover { background: rgba(59, 130, 246, 0.5); border-color: #3b82f6; }
+    .btn-copy:active { transform: scale(0.95); }
+
+    .btn-back {
+      display: inline-block; margin-top: 1rem; text-decoration: none; color: #9ca3af;
+      border: 1px solid rgba(255,255,255,0.1); padding: 10px 20px; border-radius: 8px;
+      transition: all 0.2s;
+    }
+    .btn-back:hover { color: white; border-color: white; background: rgba(255,255,255,0.05); }
+
+  </style>
+</head>
+<body>
+  <div class="grain"></div>
+  <div class="gradient-bg"></div>
+
+  <div class="content">
+    <header class="page-header">
+      <h1 class="page-title">Método de Bisección</h1>
+      <div style="color: #93c5fd;">Actividad 6B</div>
+    </header>
+
+    <div class="glass-card">
+      <h2>Concepto Teórico</h2>
+      <p>
+        El método de bisección es un algoritmo de búsqueda de raíces que trabaja dividiendo el intervalo a la mitad y seleccionando el subintervalo que tiene la raíz.
+      </p>
+      <p>
+        <strong>Condiciones:</strong> La función debe ser continua en el intervalo [a, b] y debe cumplirse que <em>f(a) * f(b) < 0</em> (cambio de signo).
+      </p>
+      <p>
+        <strong>Fórmula del punto medio:</strong><br>
+        <code>c = (a + b) / 2</code>
+      </p>
+    </div>
+
+    <div class="glass-card">
+      <h2>Implementación en Python</h2>
+      <div class="code-container">
+        <button class="btn-copy" onclick="copiarCodigo()">📋 Copiar</button>
+        
+        <pre><code id="pythonCode">def biseccion(f, a, b, tol=1e-6, max_iter=100):
+    print("\n──────── MÉTODO DE LA BISECCIÓN ────────")
+    print(f"{'Iter':<6} {'a':<12} {'b':<12} {'c':<12} {'f(c)':<15} {'Error':<12}")
+    print("─" * 70)
+
+    if f(a) * f(b) > 0:
+        print("Intervalo inválido: f(a) y f(b) deben tener signos opuestos.")
+        return None
+
+    for i in range(1, max_iter + 1):
+        c = (a + b) / 2
+        fc = f(c)
+        error = abs(b - a)
+        print(f"{i:<6} {a:<12.6f} {b:<12.6f} {c:<12.6f} {fc:<15.6e} {error:<12.6e}")
+
+        if abs(fc) < tol or error < tol:
+            print(f"\n✔ Convergió en {i} iteraciones → Raíz ≈ {c:.8f}")
+            return c
+        if f(a) * fc < 0:
+            b = c
+        else:
+            a = c
+    print("\n✘ No convergió.")
+    return c
+
+f = lambda x: x**3 + 4*x**2 - 10
+biseccion(f, 1, 2)</code></pre>
+      </div>
+    </div>
+
+    <div style="text-align: center;">
+      <a href="unidad2.html" class="btn-back">⬅ Volver al Menú Unidad 2</a>
+    </div>
+
+  </div>
+
+  <script>
+    function copiarCodigo() {
+      const codigo = document.getElementById('pythonCode').innerText;
+      navigator.clipboard.writeText(codigo).then(() => {
+        const btn = document.querySelector('.btn-copy');
+        btn.innerHTML = '✅ Copiado!';
+        setTimeout(() => { btn.innerHTML = '📋 Copiar'; }, 2000);
+      });
+    }
+  </script>
+</body>
+</html>
