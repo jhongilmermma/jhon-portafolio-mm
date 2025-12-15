@@ -157,20 +157,18 @@ biseccion(f, 1, 2)</code></pre>
     </div>
 
     <div style="text-align: center;">
-      <a href="unidad2.html" class="btn-back">⬅ Volver al Menú Unidad 2</a>
-    </div>
-
-  </div>
-
-  <script>
-    function copiarCodigo() {
-      const codigo = document.getElementById('pythonCode').innerText;
-      navigator.clipboard.writeText(codigo).then(() => {
-        const btn = document.querySelector('.btn-copy');
-        btn.innerHTML = '✅ Copiado!';
-        setTimeout(() => { btn.innerHTML = '📋 Copiar'; }, 2000);
-      });
-    }
-  </script>
-</body>
-</html>
+        <a href="index.html" class="btn-back">⬅ Volver al Inicio</a>
+      </div>
+  
+    </div> <script>
+      function copiarCodigo() {
+        const codigo = document.getElementById('pythonCode').innerText;
+        navigator.clipboard.writeText(codigo).then(() => {
+          const btn = document.querySelector('.btn-copy');
+          btn.innerHTML = '✅ Copiado!';
+          setTimeout(() => { btn.innerHTML = '📋 Copiar'; }, 2000);
+        });
+      }
+    </script>
+  </body>
+  </html>
