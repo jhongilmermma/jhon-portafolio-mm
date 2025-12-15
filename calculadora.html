@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Método de la Bisección | Jhon Gilmer</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+            min-height: 100vh;
+            padding: 20px;
+            color: #fff;
+            overflow-x: hidden;
+        }
+
+        /* --- Estilos del Botón Volver --- */
+        .back-btn {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            padding: 10px 20px;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(5px);
+            border: 1px solid rgba(99, 102, 241, 0.3);
+            border-radius: 10px;
+            color: #a5b4fc;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .back-btn:hover {
+            background: rgba(99, 102, 241, 0.2);
+            color: #fff;
+            transform: translateX(-5px);
+            box-shadow: 0 0 15px rgba(99, 102, 241, 0.3);
+        }
+        /* ------------------------------- */
+
+        .background-animation {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            overflow: hidden;
+            pointer-events: none;
+        }
+
+        .circle {
+            position: absolute;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(99, 102, 241, 0.1), transparent);
+            animation: float 20s infinite;
+        }
+
+        .circle:nth-child(1) { width: 300px; height: 300px; top: 10%; left: 10%; animation-delay: 0s; }
+        .circle:nth-child(2) { width: 200px; height: 200px; top: 60%; right: 10%; animation-delay: 5s; }
+        .circle:nth-child(3) { width: 250px; height: 250px; bottom: 10%; left: 50%; animation-delay: 10s; }
+
+        @keyframes float {
+            0%, 100% { transform: translate(0, 0); }
+            33% { transform: translate(50px, -50px); }
+            66% { transform: translate(-50px, 50px); }
+        }
+
+        .container {
+            position: relative;
+            z-index: 1;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding-top: 40px; /* Espacio para el botón volver */
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            animation: fadeInDown 0.8s ease;
+        }
+
+        .header h1 {
+            font-size: 3em;
+            font-weight: 700;
+            text-shadow: 0 0 20px rgba(99, 102, 241, 0.5);
+            margin-bottom: 10px;
+            background: linear-gradient(135deg, #6366f1, #8b5cf6, #ec4899);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .header p { color: #a5b4fc; font-size: 1.1em; }
+
+        .main-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+
+        .card {
+            background: rgba(30, 30, 46, 0.8);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(99, 102, 241, 0.2);
+            animation: fadeInUp 0.8s ease;
+        }
+
+        .card h2 {
+            font-size: 1.8em;
+            margin-bottom: 20px;
+            color: #6366f1;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .input-group { margin-bottom: 20px; }
+        .input-group label { display: block; margin-bottom: 8px; color: #a5b4fc; font-weight: 600; }
+        .input-group input, .input-group select {
+            width: 100%; padding: 12px 15px;
+            background: rgba(15, 15, 25, 0.9);
+            border: 1px solid rgba(99, 102, 241, 0.3);
+            border-radius: 10px; color: #fff; font-size: 1em;
+            transition: all 0.3s ease;
+        }
+        .input-group input:focus, .input-group select:focus {
+            outline: none; border-color: #6366f1; box-shadow: 0 0 15px rgba(99, 102, 241, 0.3);
+        }
+
+        .btn {
+            width: 100%; padding: 15px; font-size: 1.1em; font-weight: 600;
+            border: none; border-radius: 12px; cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .btn-primary { background: linear-gradient(135deg, #6366f1, #8b5cf6); color: #fff; border: 1px solid rgba(139, 92, 246, 0.5); }
+        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 10px 30px rgba(99, 102, 241, 0.5); }
+        .btn-secondary { background: linear-gradient(135deg, #ef4444, #dc2626); color: #fff; border: 1px solid rgba(239, 68, 68, 0.5); margin-top: 10px; }
+        .btn-secondary:hover { transform: translateY(-2px); box-shadow: 0 10px 30px rgba(239, 68, 68, 0.5); }
+
+        .result-box {
+            background: rgba(15, 15, 25, 0.9); border: 1px solid rgba(16, 185, 129, 0.5);
+            border-radius: 15px; padding: 20px; margin-top: 20px; display: none;
+        }
+        .result-box.show { display: block; animation: slideIn 0.5s ease; }
+        @keyframes slideIn { from { opacity: 0; transform: translateY(-20px); } to { opacity: 1; transform: translateY(0); } }
+        .result-box h3 { color: #10b981; margin-bottom: 15px; }
+        .result-value { font-size: 2em; color: #fff; text-shadow: 0 0 10px rgba(16, 185, 129, 0.5); }
+
+        .table-container { grid-column: 1 / -1; overflow-x: auto; }
+        table { width: 100%; border-collapse: collapse; background: rgba(30, 30, 46, 0.8); backdrop-filter: blur(10px); border-radius: 15px; overflow: hidden; }
+        thead { background: linear-gradient(135deg, #6366f1, #8b5cf6); }
+        th { padding: 15px; text-align: center; font-weight: 600; color: #fff; }
+        td { padding: 12px; text-align: center; border-bottom: 1px solid rgba(99, 102, 241, 0.2); color: #a5b4fc; }
+        tbody tr:hover { background: rgba(99, 102, 241, 0.1); }
+        .converged { color: #10b981; font-weight: 600; }
+
+        .graph-container {
+            margin-top: 20px; background: rgba(15, 15, 25, 0.9);
+            border: 1px solid rgba(99, 102, 241, 0.3); border-radius: 15px; padding: 20px;
+        }
+        #graphCanvas { width: 100%; height: 400px; border-radius: 10px; }
+        
+        .legend { display: flex; gap: 20px; justify-content: center; flex-wrap: wrap; margin-top: 15px; }
+        .legend-item { display: flex; align-items: center; gap: 8px; color: #a5b4fc; font-size: 0.9em; }
+        .legend-color { width: 20px; height: 3px; border-radius: 2px; }
+
+        .footer { text-align: center; margin-top: 40px; animation: fadeIn 1s ease 0.5s both; }
+        .footer p { color: #a5b4fc; }
+        .footer a { color: #6366f1; text-decoration: none; }
+        
+        @keyframes fadeInDown { from { opacity: 0; transform: translateY(-30px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes fadeInUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+        @media (max-width: 768px) {
+            .main-grid { grid-template-columns: 1fr; }
+            .header h1 { font-size: 2em; }
+        }
+        .formula { background: rgba(99, 102, 241, 0.1); padding: 15px; border-radius: 10px; margin: 15px 0; border-left: 3px solid #6366f1; }
+        .formula code { color: #a5b4fc; font-family: 'Courier New', monospace; font-size: 1.1em; }
+    </style>
+</head>
+<body>
+    <a href="index.html" class="back-btn">
+        <span>←</span> Volver al Portafolio
+    </a>
+
+    <div class="background-animation">
+        <div class="circle"></div>
+        <div class="circle"></div>
+        <div class="circle"></div>
+    </div>
+
+    <div class="container">
+        <div class="header">
+            <h1>MÉTODO DE LA BISECCIÓN</h1>
+            <p>Encuentra raíces de funciones de forma iterativa</p>
+        </div>
+
+        <div class="main-grid">
+            <div class="card">
+                <h2>📊 Parámetros</h2>
+                <div class="input-group">
+                    <label>Función f(x)</label>
+                    <select id="functionSelect">
+                        <option value="x^3 + 4*x^2 - 10">x³ + 4x² - 10</option>
+                        <option value="x^2 - 4">x² - 4</option>
+                        <option value="x^3 - x - 2">x³ - x - 2</option>
+                        <option value="cos(x) - x">cos(x) - x</option>
+                        <option value="e^x - 3*x">eˣ - 3x</option>
+                        <option value="custom">Personalizada</option>
+                    </select>
+                </div>
+                <div class="input-group" id="customFunctionGroup" style="display: none;">
+                    <label>Función personalizada</label>
+                    <input type="text" id="customFunction" placeholder="Ej: x^2 - 2">
+                    <small style="color: #a5b4fc; font-size: 0.85em;">Usa: x, ^, *, /, +, -, sin(), cos(), tan(), sqrt(), e^x, log()</small>
+                </div>
+                <div class="input-group">
+                    <label>Intervalo inicial [a, b]</label>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                        <input type="number" id="a" value="1" step="0.1" placeholder="a">
+                        <input type="number" id="b" value="2" step="0.1" placeholder="b">
+                    </div>
+                </div>
+                <div class="input-group">
+                    <label>Tolerancia (ε)</label>
+                    <input type="number" id="tolerance" value="0.000001" step="0.000001">
+                </div>
+                <div class="input-group">
+                    <label>Iteraciones máximas</label>
+                    <input type="number" id="maxIter" value="100" min="1" max="1000">
+                </div>
+                <button class="btn btn-primary" onclick="calculate()">🚀 Calcular Raíz</button>
+                <button class="btn btn-secondary" onclick="reset()">🔄 Limpiar</button>
+            </div>
+
+            <div class="card">
+                <h2>ℹ️ Información del Método</h2>
+                <p style="color: #a5b4fc; line-height: 1.8;">El <strong style="color: #6366f1;">Método de la Bisección</strong> es un algoritmo numérico que encuentra raíces de funciones continuas dividiendo repetidamente un intervalo por la mitad.</p>
+                <div class="formula"><strong style="color: #6366f1;">Fórmula:</strong><br><code>c = (a + b) / 2</code></div>
+                <div class="formula"><strong style="color: #6366f1;">Condición:</strong><br><code>f(a) × f(b) < 0</code></div>
+                <div class="result-box" id="resultBox">
+                    <h3>✅ Resultado</h3>
+                    <div class="result-value" id="resultValue">-</div>
+                    <p id="resultInfo" style="color: #a5b4fc; margin-top: 10px;"></p>
+                </div>
+            </div>
+        </div>
+
+        <div class="card table-container">
+            <h2>📊 Gráfico Interactivo</h2>
+            <div class="graph-container">
+                <canvas id="graphCanvas"></canvas>
+                <div class="legend">
+                    <div class="legend-item"><div class="legend-color" style="background: #6366f1;"></div><span>Función f(x)</span></div>
+                    <div class="legend-item"><div class="legend-color" style="background: #10b981; height: 2px;"></div><span>Eje X</span></div>
+                    <div class="legend-item"><div class="legend-color" style="background: #ef4444;"></div><span>Intervalo [a, b]</span></div>
+                    <div class="legend-item"><div class="legend-color" style="background: #f59e0b;"></div><span>Punto medio c</span></div>
+                    <div class="legend-item"><div class="legend-color" style="background: #10b981;"></div><span>Raíz encontrada</span></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card table-container">
+            <h2>📈 Iteraciones</h2>
+            <div style="overflow-x: auto;">
+                <table id="iterationTable">
+                    <thead><tr><th>Iter</th><th>a</th><th>b</th><th>c</th><th>f(c)</th><th>Error</th><th>Estado</th></tr></thead>
+                    <tbody id="tableBody"><tr><td colspan="7" style="color: #6b7280;">Ingresa los parámetros y presiona "Calcular Raíz"</td></tr></tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="footer">
+            <p>© 2025 Jhon Gilmer Mamani Apaza | <a href="https://github.com/jhongilmermm" target="_blank">GitHub</a></p>
+        </div>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('graphCanvas');
+        const ctx = canvas.getContext('2d');
+        let currentFunction = null;
+        let currentInterval = null;
+        let currentRoot = null;
+
+        function resizeCanvas() {
+            const rect = canvas.getBoundingClientRect();
+            canvas.width = rect.width * window.devicePixelRatio;
+            canvas.height = 400 * window.devicePixelRatio;
+            ctx.scale(window.devicePixelRatio, window.devicePixelRatio);
+            canvas.style.width = rect.width + 'px';
+            canvas.style.height = '400px';
+            if (currentFunction) drawGraph(currentFunction, currentInterval, currentRoot);
+        }
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
+
+        function drawGraph(f, interval, root) {
+            currentFunction = f;
+            currentInterval = interval;
+            currentRoot = root;
+            const width = canvas.width / window.devicePixelRatio;
+            const height = canvas.height / window.devicePixelRatio;
+            ctx.clearRect(0, 0, width, height);
+            const padding = 50;
+            const graphWidth = width - 2 * padding;
+            const graphHeight = height - 2 * padding;
+
+            let xMin = interval ? interval.a - 1 : -5;
+            let xMax = interval ? interval.b + 1 : 5;
+            const range = xMax - xMin;
+            xMin -= range * 0.1; xMax += range * 0.1;
+
+            let yMin = Infinity, yMax = -Infinity;
+            const samples = 200;
+
+            for (let i = 0; i <= samples; i++) {
+                const x = xMin + (xMax - xMin) * (i / samples);
+                try {
+                    const y = f(x);
+                    if (isFinite(y)) { yMin = Math.min(yMin, y); yMax = Math.max(yMax, y); }
+                } catch (e) {}
+            }
+            const yRange = yMax - yMin;
+            yMin -= yRange * 0.1; yMax += yRange * 0.1;
+
+            function toCanvasX(x) { return padding + ((x - xMin) / (xMax - xMin)) * graphWidth; }
+            function toCanvasY(y) { return height - padding - ((y - yMin) / (yMax - yMin)) * graphHeight; }
+
+            // Grid
+            ctx.strokeStyle = 'rgba(165, 180, 252, 0.3)'; ctx.lineWidth = 1; ctx.setLineDash([5, 5]);
+            for (let i = 0; i <= 10; i++) {
+                const x = xMin + (xMax - xMin) * (i / 10);
+                const cx = toCanvasX(x); ctx.beginPath(); ctx.moveTo(cx, padding); ctx.lineTo(cx, height - padding); ctx.stroke();
+            }
+            for (let i = 0; i <= 10; i++) {
+                const y = yMin + (yMax - yMin) * (i / 10);
+                const cy = toCanvasY(y); ctx.beginPath(); ctx.moveTo(padding, cy); ctx.lineTo(width - padding, cy); ctx.stroke();
+            }
+
+            // Axes
+            ctx.setLineDash([]); ctx.strokeStyle = '#10b981'; ctx.lineWidth = 2;
+            const y0 = toCanvasY(0); ctx.beginPath(); ctx.moveTo(padding, y0); ctx.lineTo(width - padding, y0); ctx.stroke();
+            const x0 = toCanvasX(0); ctx.beginPath(); ctx.moveTo(x0, padding); ctx.lineTo(x0, height - padding); ctx.stroke();
+
+            // Function
+            ctx.strokeStyle = '#6366f1'; ctx.lineWidth = 3; ctx.beginPath();
+            let started = false;
+            for (let i = 0; i <= samples; i++) {
+                const x = xMin + (xMax - xMin) * (i / samples);
+                try {
+                    const y = f(x);
+                    if (isFinite(y)) {
+                        const cx = toCanvasX(x); const cy = toCanvasY(y);
+                        if (!started) { ctx.moveTo(cx, cy); started = true; } else { ctx.lineTo(cx, cy); }
+                    }
+                } catch (e) {}
+            }
+            ctx.stroke();
+
+            if (interval) {
+                ctx.fillStyle = 'rgba(239, 68, 68, 0.1)';
+                const ax = toCanvasX(interval.a), bx = toCanvasX(interval.b);
+                ctx.fillRect(ax, padding, bx - ax, graphHeight);
+                ctx.strokeStyle = '#ef4444'; ctx.lineWidth = 3; ctx.setLineDash([10, 5]);
+                
+                ctx.beginPath(); ctx.moveTo(ax, padding); ctx.lineTo(ax, height - padding); ctx.stroke();
+                ctx.beginPath(); ctx.moveTo(bx, padding); ctx.lineTo(bx, height - padding); ctx.stroke();
+                
+                ctx.fillStyle = '#ef4444'; ctx.font = 'bold 14px Arial';
+                ctx.fillText(`a`, ax - 10, height - 20); ctx.fillText(`b`, bx - 10, height - 20);
+
+                if (interval.c !== undefined) {
+                    const cx = toCanvasX(interval.c);
+                    ctx.strokeStyle = '#f59e0b'; ctx.lineWidth = 2; ctx.setLineDash([5, 5]);
+                    ctx.beginPath(); ctx.moveTo(cx, padding); ctx.lineTo(cx, height - padding); ctx.stroke();
+                    ctx.fillStyle = '#f59e0b'; ctx.beginPath(); ctx.arc(cx, toCanvasY(f(interval.c)), 6, 0, Math.PI * 2); ctx.fill();
+                }
+            }
+
+            if (root !== null) {
+                const rx = toCanvasX(root), ry = toCanvasY(f(root));
+                ctx.setLineDash([]); ctx.fillStyle = '#10b981'; ctx.strokeStyle = '#fff'; ctx.lineWidth = 3;
+                ctx.beginPath(); ctx.arc(rx, ry, 8, 0, Math.PI * 2); ctx.fill(); ctx.stroke();
+                ctx.fillStyle = '#10b981'; ctx.font = 'bold 16px Arial'; ctx.fillText(`Raíz: ${root.toFixed(6)}`, rx + 15, ry - 10);
+            }
+        }
+
+        document.getElementById('functionSelect').addEventListener('change', function() {
+            document.getElementById('customFunctionGroup').style.display = this.value === 'custom' ? 'block' : 'none';
+        });
+
+        function parseFunction(funcStr) {
+            funcStr = funcStr.replace(/\^/g, '**').replace(/e\*\*x/g, 'Math.exp(x)')
+                     .replace(/sin/g, 'Math.sin').replace(/cos/g, 'Math.cos')
+                     .replace(/tan/g, 'Math.tan').replace(/sqrt/g, 'Math.sqrt').replace(/log/g, 'Math.log');
+            return new Function('x', `return ${funcStr}`);
+        }
+
+        function calculate() {
+            const functionSelect = document.getElementById('functionSelect').value;
+            let funcStr = functionSelect === 'custom' ? document.getElementById('customFunction').value : functionSelect;
+            if (!funcStr) { alert('Ingresa una función'); return; }
+
+            let a = parseFloat(document.getElementById('a').value);
+            let b = parseFloat(document.getElementById('b').value);
+            const tol = parseFloat(document.getElementById('tolerance').value);
+            const maxIter = parseInt(document.getElementById('maxIter').value);
+
+            let f;
+            try { f = parseFunction(funcStr); } catch (e) { alert('Error en la función'); return; }
+
+            drawGraph(f, {a: a, b: b}, null);
+            const tableBody = document.getElementById('tableBody');
+            tableBody.innerHTML = '';
+
+            if (f(a) * f(b) > 0) { alert('Intervalo inválido: f(a) y f(b) deben tener signos opuestos.'); return; }
+
+            let converged = false;
+            let finalRoot = null;
+            let iterations = 0;
+
+            for (let i = 1; i <= maxIter; i++) {
+                const c = (a + b) / 2;
+                const fc = f(c);
+                const error = Math.abs(b - a);
+                iterations = i;
+
+                drawGraph(f, {a: a, b: b, c: c}, null);
+
+                const row = document.createElement('tr');
+                if (Math.abs(fc) < tol || error < tol) {
+                    row.innerHTML = `<td>${i}</td><td>${a.toFixed(6)}</td><td>${b.toFixed(6)}</td><td>${c.toFixed(6)}</td><td>${fc.toExponential(6)}</td><td>${error.toExponential(6)}</td><td class="converged">✓ Convergió</td>`;
+                    converged = true; finalRoot = c;
+                } else {
+                    row.innerHTML = `<td>${i}</td><td>${a.toFixed(6)}</td><td>${b.toFixed(6)}</td><td>${c.toFixed(6)}</td><td>${fc.toExponential(6)}</td><td>${error.toExponential(6)}</td><td>Calculando...</td>`;
+                }
+                tableBody.appendChild(row);
+
+                if (converged) { drawGraph(f, {a: a, b: b}, finalRoot); break; }
+                if (f(a) * fc < 0) b = c; else a = c;
+            }
+
+            const resultBox = document.getElementById('resultBox');
+            const resultValue = document.getElementById('resultValue');
+            const resultInfo = document.getElementById('resultInfo');
+            resultBox.classList.add('show');
+            if (converged) {
+                resultValue.textContent = `x ≈ ${finalRoot.toFixed(8)}`;
+                resultInfo.textContent = `Convergió en ${iterations} iteraciones`;
+                resultValue.style.color = '#fff';
+            } else {
+                resultValue.textContent = 'No convergió';
+                resultInfo.textContent = `Se alcanzó el máximo de ${maxIter} iteraciones`;
+                resultValue.style.color = '#ef4444';
+            }
+            tableBody.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }
+
+        function reset() {
+            document.getElementById('functionSelect').value = 'x^3 + 4*x^2 - 10';
+            document.getElementById('customFunctionGroup').style.display = 'none';
+            document.getElementById('a').value = '1'; document.getElementById('b').value = '2';
+            document.getElementById('tableBody').innerHTML = '<tr><td colspan="7" style="color: #6b7280;">Ingresa los parámetros y presiona "Calcular Raíz"</td></tr>';
+            document.getElementById('resultBox').classList.remove('show');
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            currentFunction = null; currentInterval = null; currentRoot = null;
+        }
+    </script>
+</body>
+</html>
