@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Método de la Secante - Jhon Gilmer</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet" />
+  
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+    
+    body {
+      font-family: 'Inter', sans-serif;
+      background: #0a0a0a;
+      color: #ffffff;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* Fondo Animado (Mismo del portafolio) */
+    .animated-bg {
+      position: fixed;
+      top: 0; left: 0; width: 100%; height: 100%;
+      z-index: -1;
+      overflow: hidden;
+    }
+    .orb {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(80px);
+      opacity: 0.4;
+      animation: float 20s infinite ease-in-out;
+    }
+    .orb-1 { width: 500px; height: 500px; background: radial-gradient(circle, rgba(99, 102, 241, 0.6) 0%, transparent 70%); top: -200px; left: -200px; }
+    .orb-2 { width: 400px; height: 400px; background: radial-gradient(circle, rgba(139, 92, 246, 0.6) 0%, transparent 70%); top: 40%; right: -150px; animation-delay: 3s; }
+    
+    @keyframes float {
+      0%, 100% { transform: translate(0, 0); }
+      50% { transform: translate(-30px, 50px); }
+    }
+
+    /* Contenedor principal */
+    .container {
+      max-width: 1000px;
+      margin: 0 auto;
+      padding: 4rem 2rem;
+    }
+
+    /* Tarjeta de Vidrio */
+    .glass-card {
+      background: rgba(17, 17, 17, 0.7);
+      backdrop-filter: blur(20px) saturate(180%);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 24px;
+      padding: 3rem;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+    }
+
+    .title {
+      font-size: 2.5rem;
+      font-weight: 800;
+      margin-bottom: 1rem;
+      background: linear-gradient(135deg, #ffffff 0%, #a5b4fc 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    /* Botones */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.8rem 1.5rem;
+      border-radius: 12px;
+      font-weight: 600;
+      transition: all 0.3s;
+      text-decoration: none;
+    }
+    .btn-back {
+      background: rgba(255, 255, 255, 0.1);
+      color: white;
+      margin-bottom: 2rem;
+    }
+    .btn-back:hover { background: rgba(255, 255, 255, 0.2); transform: translateX(-5px); }
+    
+    .btn-download {
+      background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+      color: white;
+      border: none;
+      margin-top: 2rem;
+    }
+    .btn-download:hover { transform: translateY(-3px); box-shadow: 0 10px 25px rgba(99, 102, 241, 0.4); }
+
+    /* Estilo del bloque de código */
+    pre {
+      border-radius: 16px !important;
+      border: 1px solid rgba(255, 255, 255, 0.1) !important;
+      background: #1a1a1a !important;
+      margin-top: 1.5rem !important;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="animated-bg">
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+  </div>
+
+  <div class="container">
+    <a href="index.html" class="btn btn-back">
+      ← Volver al Portafolio
+    </a>
+
+    <div class="glass-card">
+      <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem;">
+        <span style="font-size: 2.5rem;">📉</span>
+        <h1 class="title">Método de la Secante</h1>
+      </div>
+      
+      <p style="color: rgba(255, 255, 255, 0.7); line-height: 1.6; margin-bottom: 2rem;">
+        Este algoritmo encuentra las raíces de una función de forma iterativa utilizando una aproximación por recta secante. A diferencia del método de Newton-Raphson, no requiere calcular la derivada de la función.
+      </p>
+
+      <div style="position: relative;">
+        <div style="position: absolute; right: 1rem; top: 1rem; color: rgba(255,255,255,0.4); font-size: 0.8rem; font-family: monospace;">Python</div>
+        <pre><code class="language-python">
+def secante(f, x0, x1, tol=1e-6, max_iter=100):
+    print("\n──────── MÉTODO DE LA SECANTE ────────")
+    print(f"{'Iter':<6} {'x_n-1':<12} {'x_n':<12} {'x_n+1':<12} {'f(x_n+1)':<15} {'Error':<12}")
+    print("─" * 70)
+
+    for i in range(1, max_iter + 1):
+        fx0, fx1 = f(x0), f(x1)
+        
+        # Evitar división por cero
+        if abs(fx1 - fx0) < 1e-12:
+            print("Error: división por cero.")
+            return None
+            
+        # Fórmula de la Secante
+        x2 = x1 - fx1 * (x1 - x0) / (fx1 - fx0)
+        fx2 = f(x2)
+        error = abs(x2 - x1)
+        
+        print(f"{i:<6} {x0:<12.6f} {x1:<12.6f} {x2:<12.6f} {fx2:<15.6e} {error:<12.6e}")
+        
+        if abs(fx2) < tol or error < tol:
+            print(f"\n✔ Convergió en {i} iteraciones → Raíz ≈ {x2:.8f}")
+            return x2
+            
+        x0, x1 = x1, x2
+        
+    print("\n✘ No convergió.")
+    return x2
+
+# Ejemplo de uso
+f = lambda x: x**3 - 5*x + 3
+secante(f, 0, 1)
+        </code></pre>
+      </div>
+      <div style="display: flex; gap: 1rem; flex-wrap: wrap; margin-top: 2rem;">
+
+        <a href="metodo%20de%20la%20secante.py" download class="btn btn-download">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+          </svg>
+          Descargar Código (.py)
+        </a>
+
+        <a href="informe_secante.pdf" target="_blank" class="btn btn-download" style="background: linear-gradient(135deg, #ef4444 0%, #b91c1c 100%);">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+          </svg>
+          Ver Informe PDF
+        </a>
+
+      </div>
+
+    </div>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-python.min.js"></script>
+</body>
+</html>
