@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="es" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Proyecto Supervivencia | Portfolio</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  
+  <style>
+    body { font-family: 'Space Grotesk', sans-serif; background-color: #050505; color: #e2e8f0; }
+    
+    /* Fondo "Cyberpunk" */
+    .bg-grid {
+      background-size: 40px 40px;
+      background-image: linear-gradient(to right, rgba(255, 255, 255, 0.05) 1px, transparent 1px),
+                        linear-gradient(to bottom, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+      mask-image: linear-gradient(to bottom, black 40%, transparent 100%);
+    }
+
+    /* Tarjetas Neón */
+    .neon-card {
+      background: rgba(20, 20, 25, 0.6);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      transition: all 0.3s ease;
+    }
+    .neon-card:hover {
+      transform: translateY(-5px);
+      border-color: #d946ef; /* Fuchsia */
+      box-shadow: 0 0 20px rgba(217, 70, 239, 0.2);
+    }
+    
+    /* Animación de brillo */
+    .glow-text {
+      text-shadow: 0 0 10px rgba(217, 70, 239, 0.5);
+    }
+  </style>
+</head>
+<body class="min-h-screen relative overflow-x-hidden selection:bg-fuchsia-500 selection:text-white">
+
+  <div class="fixed inset-0 bg-grid z-[-1]"></div>
+
+  <nav class="fixed top-6 left-1/2 -translate-x-1/2 z-50">
+    <div class="bg-black/80 backdrop-blur-md border border-white/10 rounded-full px-6 py-3 flex items-center gap-6 shadow-2xl">
+      <a href="unidad2.html" class="text-xs font-bold text-gray-400 hover:text-white transition-colors flex items-center gap-2">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
+        VOLVER
+      </a>
+      <div class="w-px h-4 bg-white/10"></div>
+      <span class="text-xs font-bold text-transparent bg-clip-text bg-gradient-to-r from-fuchsia-400 to-purple-400 tracking-widest">
+        PROYECTO 09: SUPERVIVENCIA
+      </span>
+    </div>
+  </nav>
+
+  <main class="max-w-5xl mx-auto px-6 pt-32 pb-20">
+    
+    <header class="text-center mb-20">
+      <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-fuchsia-500/10 border border-fuchsia-500/20 text-fuchsia-400 text-xs font-bold tracking-widest uppercase mb-6">
+        <span class="w-2 h-2 rounded-full bg-fuchsia-500 animate-pulse"></span>
+        Simulación en R
+      </div>
+      <h1 class="text-5xl md:text-7xl font-bold text-white mb-6 tracking-tight glow-text">
+        SUPERVIVENCIA
+      </h1>
+      <p class="text-lg text-gray-400 max-w-2xl mx-auto leading-relaxed">
+        Un algoritmo diseñado para resolver un juego de <strong>intercambio de recursos</strong> (Caramelos vs Chupetines). El objetivo: lograr que 9 jugadores obtengan su recompensa en el mínimo número de iteraciones.
+      </p>
+    </header>
+
+    <section class="mb-20">
+      <h2 class="text-2xl font-bold text-white mb-8 flex items-center gap-3">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-fuchsia-500"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+        Reglas del Algoritmo
+      </h2>
+      
+      <div class="grid md:grid-cols-3 gap-6">
+        <div class="neon-card p-6 rounded-2xl relative overflow-hidden group">
+          <div class="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity text-fuchsia-500 font-bold text-6xl">1</div>
+          <h3 class="text-lg font-bold text-white mb-2">Intercambio Simple</h3>
+          <p class="text-sm text-gray-400 mb-4">Reunir los tres tipos de caramelos para ganar.</p>
+          <div class="flex items-center justify-center gap-2 bg-black/30 p-3 rounded-lg border border-white/5">
+            <span class="text-xl">🍬A + 🍬B + 🍬C</span>
+            <span class="text-gray-500">➜</span>
+            <span class="text-2xl">🍭</span>
+          </div>
+        </div>
+
+        <div class="neon-card p-6 rounded-2xl relative overflow-hidden group">
+          <div class="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity text-fuchsia-500 font-bold text-6xl">2</div>
+          <h3 class="text-lg font-bold text-white mb-2">Cooperación Doble</h3>
+          <p class="text-sm text-gray-400 mb-4">Dos jugadores con pares iguales colaboran.</p>
+          <div class="flex items-center justify-center gap-2 bg-black/30 p-3 rounded-lg border border-white/5">
+            <span class="text-xl">🍬🍬 + 🍬🍬</span>
+            <span class="text-gray-500">➜</span>
+            <span class="text-2xl">🍭🍭</span>
+          </div>
+        </div>
+
+        <div class="neon-card p-6 rounded-2xl relative overflow-hidden group border-red-500/30">
+          <div class="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity text-red-500 font-bold text-6xl">3</div>
+          <h3 class="text-lg font-bold text-white mb-2">Sacrificio</h3>
+          <p class="text-sm text-gray-400 mb-4">Devolver un premio para generar recursos.</p>
+          <div class="flex items-center justify-center gap-2 bg-black/30 p-3 rounded-lg border border-white/5">
+            <span class="text-2xl">🍭</span>
+            <span class="text-gray-500">➜</span>
+            <span class="text-xl">🍬A + 🍬B + 🍬C</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="grid md:grid-cols-2 gap-12 items-center mb-20">
+      <div>
+        <h2 class="text-3xl font-bold text-white mb-6">Resultados de la Simulación</h2>
+        <p class="text-gray-400 mb-6 leading-relaxed">
+          El algoritmo ejecutó una serie de intercambios estratégicos, incluyendo un movimiento clave de "sacrificio" en la Iteración 5, para desbloquear el juego.
+        </p>
+        <ul class="space-y-4">
+          <li class="flex items-center gap-3">
+            <span class="w-8 h-8 rounded-full bg-green-500/20 text-green-400 flex items-center justify-center text-sm font-bold">✓</span>
+            <span class="text-gray-300">9 Jugadores completados</span>
+          </li>
+          <li class="flex items-center gap-3">
+            <span class="w-8 h-8 rounded-full bg-fuchsia-500/20 text-fuchsia-400 flex items-center justify-center text-sm font-bold">✓</span>
+            <span class="text-gray-300">Solo 7 Iteraciones</span>
+          </li>
+          <li class="flex items-center gap-3">
+            <span class="w-8 h-8 rounded-full bg-blue-500/20 text-blue-400 flex items-center justify-center text-sm font-bold">✓</span>
+            <span class="text-gray-300">Estrategia Óptima</span>
+          </li>
+        </ul>
+      </div>
+
+      <div class="bg-[#0f0f12] rounded-xl border border-white/10 shadow-2xl overflow-hidden font-mono text-xs md:text-sm">
+        <div class="bg-white/5 px-4 py-2 flex items-center gap-2 border-b border-white/5">
+          <div class="w-3 h-3 rounded-full bg-red-500"></div>
+          <div class="w-3 h-3 rounded-full bg-yellow-500"></div>
+          <div class="w-3 h-3 rounded-full bg-green-500"></div>
+          <span class="ml-2 text-gray-500">R Console Output</span>
+        </div>
+        <div class="p-6 text-gray-300 overflow-y-auto max-h-[300px]">
+          <p class="text-gray-500"># Iniciando simulación...</p>
+          <p>> Iteración 1: Aplicando Regla 2 (+2)</p>
+          <p>> Iteración 2: Aplicando Regla 2 (+2)</p>
+          <p>> Iteración 3: Tercera aplicación (+2)</p>
+          <p class="text-yellow-400">> Iteración 5: Aplicando Regla 3 (Sacrificio)</p>
+          <p>... Procesando ...</p>
+          <p>> Iteración 7: Finalizando...</p>
+          <br>
+          <p class="text-green-400 font-bold">RESULTADO FINAL:</p>
+          <p class="text-white">Todos los jugadores lograron el objetivo.</p>
+          <p class="text-white">Total Iteraciones: <span class="text-fuchsia-400">7</span></p>
+        </div>
+      </div>
+    </section>
+
+    <div class="flex flex-wrap justify-center gap-6 mt-12">
+      
+      <a href="supervivencia_codigo.R" download class="group relative px-8 py-4 rounded-xl bg-white/5 border border-white/10 hover:border-fuchsia-500/50 transition-all overflow-hidden">
+        <div class="absolute inset-0 bg-fuchsia-600/10 translate-y-full group-hover:translate-y-0 transition-transform duration-300"></div>
+        <div class="relative flex items-center gap-3">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-fuchsia-400"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          <span class="font-bold text-white">Descargar Script .R</span>
+        </div>
+      </a>
+
+      <a href="informe_supervivencia.pdf" target="_blank" class="group relative px-8 py-4 rounded-xl bg-white/5 border border-white/10 hover:border-blue-500/50 transition-all overflow-hidden">
+        <div class="absolute inset-0 bg-blue-600/10 translate-y-full group-hover:translate-y-0 transition-transform duration-300"></div>
+        <div class="relative flex items-center gap-3">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-blue-400"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+          <span class="font-bold text-white">Ver  PDF</span>
+        </div>
+      </a>
+
+    </div>
+
+  </main>
+
+</body>
+</html>

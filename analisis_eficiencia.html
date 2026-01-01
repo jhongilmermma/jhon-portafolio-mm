@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="es" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Benchmark: Pseudoinversa vs Gradiente | Portfolio</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/lucide@latest"></script>
+  
+  <style>
+    body { font-family: 'Inter', sans-serif; background-color: #0b1121; color: #cbd5e1; }
+    .font-mono { font-family: 'JetBrains Mono', monospace; }
+    
+    /* Fondo Técnico */
+    .grid-bg {
+      background-size: 50px 50px;
+      background-image: linear-gradient(to right, rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+                        linear-gradient(to bottom, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+      position: fixed; inset: 0; z-index: -1;
+    }
+
+    /* Paneles Glassmorphism Avanzados */
+    .tech-panel {
+      background: rgba(15, 23, 42, 0.6);
+      backdrop-filter: blur(16px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      box-shadow: 0 0 40px rgba(0, 0, 0, 0.2);
+      transition: all 0.3s ease;
+    }
+    .tech-panel:hover {
+      border-color: rgba(99, 102, 241, 0.3);
+      transform: translateY(-2px);
+    }
+
+    /* Gradientes de Texto */
+    .text-gradient {
+      background: linear-gradient(135deg, #818cf8 0%, #c084fc 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    /* Animación de Barras de Gráfica */
+    @keyframes growWidth { from { width: 0; } to { width: var(--width); } }
+    .bar-animate { animation: growWidth 1.5s ease-out forwards; }
+  </style>
+</head>
+<body class="min-h-screen relative selection:bg-indigo-500/30 selection:text-indigo-200">
+
+  <div class="grid-bg"></div>
+
+  <nav class="fixed top-6 left-1/2 -translate-x-1/2 z-50 w-full max-w-2xl px-4">
+    <div class="tech-panel rounded-full px-6 py-3 flex items-center justify-between">
+      <a href="unidad2.html" class="text-xs font-bold text-slate-400 hover:text-white flex items-center gap-2 transition-colors">
+        <i data-lucide="arrow-left" class="w-4 h-4"></i> VOLVER AL PANEL
+      </a>
+      <div class="h-4 w-px bg-white/10"></div>
+      <span class="text-xs font-mono text-indigo-400">PROYECTO_10 :: BENCHMARKING</span>
+    </div>
+  </nav>
+
+  <main class="max-w-6xl mx-auto px-6 pt-32 pb-20">
+    
+    <header class="mb-20 text-center relative">
+      <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-indigo-500/10 rounded-full blur-[100px] -z-10"></div>
+      
+      <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-indigo-500/10 border border-indigo-500/20 text-indigo-300 text-xs font-mono mb-6">
+        <span class="w-2 h-2 rounded-full bg-indigo-500 animate-pulse"></span>
+        ALGORITMOS NUMÉRICOS & OPTIMIZACIÓN
+      </div>
+      
+      <h1 class="text-5xl md:text-7xl font-extrabold text-white mb-6 tracking-tight leading-tight">
+        Análisis de Eficiencia:<br>
+        <span class="text-gradient">Pseudoinversa vs Gradiente</span>
+      </h1>
+      
+      <p class="text-lg text-slate-400 max-w-3xl mx-auto leading-relaxed">
+        Un estudio empírico comparando el costo computacional de soluciones analíticas exactas frente a métodos iterativos aproximados en problemas de regresión lineal masiva.
+      </p>
+
+      <div class="flex justify-center gap-4 mt-8">
+        <div class="text-center px-6 py-3 bg-white/5 rounded-xl border border-white/10">
+          <p class="text-xs text-slate-500 uppercase font-bold">Lenguaje</p>
+          <p class="font-mono text-indigo-400">R Statistics</p>
+        </div>
+        <div class="text-center px-6 py-3 bg-white/5 rounded-xl border border-white/10">
+          <p class="text-xs text-slate-500 uppercase font-bold">Librería</p>
+          <p class="font-mono text-purple-400">bench::mark</p>
+        </div>
+        <div class="text-center px-6 py-3 bg-white/5 rounded-xl border border-white/10">
+          <p class="text-xs text-slate-500 uppercase font-bold">Dataset Max</p>
+          <p class="font-mono text-emerald-400">N=10,000</p>
+        </div>
+      </div>
+    </header>
+
+    <section class="grid md:grid-cols-2 gap-8 mb-20">
+      
+      <div class="tech-panel p-8 rounded-2xl border-t-4 border-red-500 relative group">
+        <div class="absolute -top-3 -right-3 bg-red-500/10 border border-red-500/30 p-2 rounded-lg">
+          <i data-lucide="sigma" class="text-red-500 w-6 h-6"></i>
+        </div>
+        <h3 class="text-2xl font-bold text-white mb-2">Pseudoinversa (SVD)</h3>
+        <p class="text-sm font-mono text-red-400 mb-6">Función nativa lm()</p>
+        
+        <div class="bg-black/40 rounded-lg p-4 mb-6 border border-white/5">
+          <p class="text-center font-serif italic text-lg text-slate-300">
+            β = (X<sup>T</sup>X)<sup>-1</sup> X<sup>T</sup>y
+          </p>
+        </div>
+        
+        <ul class="space-y-3 text-sm text-slate-400">
+          <li class="flex gap-3"><i data-lucide="x-circle" class="text-red-500 w-4 h-4 mt-1"></i> <span><strong>Complejidad O(n³):</strong> Requiere invertir matrices gigantes.</span></li>
+          <li class="flex gap-3"><i data-lucide="x-circle" class="text-red-500 w-4 h-4 mt-1"></i> <span><strong>Memoria:</strong> Almacena la matriz completa en RAM.</span></li>
+          <li class="flex gap-3"><i data-lucide="check-circle" class="text-green-500 w-4 h-4 mt-1"></i> <span><strong>Ventaja:</strong> Solución exacta en un solo paso.</span></li>
+        </ul>
+      </div>
+
+      <div class="tech-panel p-8 rounded-2xl border-t-4 border-emerald-500 relative group">
+        <div class="absolute -top-3 -right-3 bg-emerald-500/10 border border-emerald-500/30 p-2 rounded-lg">
+          <i data-lucide="trending-down" class="text-emerald-500 w-6 h-6"></i>
+        </div>
+        <h3 class="text-2xl font-bold text-white mb-2">Descenso de Gradiente</h3>
+        <p class="text-sm font-mono text-emerald-400 mb-6">Optimización Iterativa</p>
+        
+        <div class="bg-black/40 rounded-lg p-4 mb-6 border border-white/5">
+          <p class="text-center font-serif italic text-lg text-slate-300">
+            β<sub>n+1</sub> = β<sub>n</sub> - α ∇J(β)
+          </p>
+        </div>
+        
+        <ul class="space-y-3 text-sm text-slate-400">
+          <li class="flex gap-3"><i data-lucide="check-circle" class="text-emerald-500 w-4 h-4 mt-1"></i> <span><strong>Complejidad O(nd):</strong> Solo multiplicaciones vectoriales.</span></li>
+          <li class="flex gap-3"><i data-lucide="check-circle" class="text-emerald-500 w-4 h-4 mt-1"></i> <span><strong>Memoria:</strong> Extremadamente ligera (Low footprint).</span></li>
+          <li class="flex gap-3"><i data-lucide="alert-circle" class="text-yellow-500 w-4 h-4 mt-1"></i> <span><strong>Reto:</strong> Requiere ajustar Learning Rate (α).</span></li>
+        </ul>
+      </div>
+
+    </section>
+
+    <section class="mb-20">
+      <div class="flex items-center justify-between mb-8">
+        <h2 class="text-2xl font-bold text-white flex items-center gap-3">
+          <i data-lucide="table" class="text-indigo-400"></i> Resultados del Benchmark
+        </h2>
+        <span class="text-xs font-mono text-slate-500 bg-white/5 px-3 py-1 rounded">Fuente: bench::mark() output</span>
+      </div>
+
+      <div class="tech-panel rounded-2xl overflow-hidden overflow-x-auto">
+        <table class="w-full text-left border-collapse">
+          <thead>
+            <tr class="bg-indigo-900/20 text-indigo-300 text-xs font-mono uppercase tracking-wider">
+              <th class="p-5">Dataset (N)</th>
+              <th class="p-5">Método</th>
+              <th class="p-5 text-right">Tiempo (s)</th>
+              <th class="p-5 text-right">Memoria (Bytes)</th>
+              <th class="p-5 text-center">Eficiencia</th>
+            </tr>
+          </thead>
+          <tbody class="text-sm divide-y divide-white/5">
+            <tr class="bg-white/[0.02]">
+              <td class="p-5 font-mono text-slate-400" rowspan="2">N = 100</td>
+              <td class="p-5 font-bold text-red-400">Método lm (R)</td>
+              <td class="p-5 text-right font-mono">5.431 s</td>
+              <td class="p-5 text-right font-mono">104 MB</td>
+              <td class="p-5 text-center"><span class="px-2 py-1 bg-red-500/10 text-red-500 rounded text-xs">Lento</span></td>
+            </tr>
+            <tr class="bg-white/[0.02]">
+              <td class="p-5 font-bold text-emerald-400">Gradiente</td>
+              <td class="p-5 text-right font-mono text-white">0.005 s</td>
+              <td class="p-5 text-right font-mono text-white">0.14 MB</td>
+              <td class="p-5 text-center"><span class="px-2 py-1 bg-emerald-500/10 text-emerald-500 rounded text-xs">1000x</span></td>
+            </tr>
+            
+            <tr class="bg-indigo-500/[0.05] border-t border-indigo-500/20">
+              <td class="p-5 font-mono text-indigo-300 font-bold" rowspan="2">N = 10,000</td>
+              <td class="p-5 font-bold text-red-400">Método lm (R)</td>
+              <td class="p-5 text-right font-mono text-red-300">10.175 s</td>
+              <td class="p-5 text-right font-mono text-red-300 font-bold">9.86 GB ⚠️</td>
+              <td class="p-5 text-center"><span class="px-2 py-1 bg-red-500/20 text-red-400 rounded text-xs border border-red-500/30">CRÍTICO</span></td>
+            </tr>
+            <tr class="bg-indigo-500/[0.05]">
+              <td class="p-5 font-bold text-emerald-400">Gradiente</td>
+              <td class="p-5 text-right font-mono text-emerald-300">0.352 s</td>
+              <td class="p-5 text-right font-mono text-emerald-300 font-bold">8.00 MB ⚡</td>
+              <td class="p-5 text-center"><span class="px-2 py-1 bg-emerald-500/20 text-emerald-400 rounded text-xs border border-emerald-500/30">ÓPTIMO</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="grid md:grid-cols-2 gap-8 mb-20">
+      
+      <div class="tech-panel p-8 rounded-2xl">
+        <h3 class="text-lg font-bold text-white mb-6 flex items-center gap-2">
+          <i data-lucide="cpu" class="text-purple-400"></i> Consumo de RAM (N=10k)
+        </h3>
+        
+        <div class="space-y-6">
+          <div>
+            <div class="flex justify-between text-xs mb-2">
+              <span class="text-red-400 font-bold">Método lm()</span>
+              <span class="text-red-400">9,862 MB (Casi 10GB)</span>
+            </div>
+            <div class="h-4 w-full bg-white/5 rounded-full overflow-hidden">
+              <div class="h-full bg-gradient-to-r from-red-600 to-red-400 bar-animate" style="--width: 95%"></div>
+            </div>
+            <p class="text-[10px] text-slate-500 mt-1">Satura la memoria en equipos estándar.</p>
+          </div>
+
+          <div>
+            <div class="flex justify-between text-xs mb-2">
+              <span class="text-emerald-400 font-bold">Gradiente Descendente</span>
+              <span class="text-emerald-400">8 MB (0.008 GB)</span>
+            </div>
+            <div class="h-4 w-full bg-white/5 rounded-full overflow-hidden relative">
+              <div class="h-full bg-gradient-to-r from-emerald-600 to-emerald-400 bar-animate" style="--width: 2%"></div>
+            </div>
+            <p class="text-[10px] text-slate-500 mt-1">Consumo casi imperceptible.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="tech-panel p-8 rounded-2xl bg-gradient-to-br from-indigo-900/20 to-transparent">
+        <h3 class="text-lg font-bold text-white mb-6 flex items-center gap-2">
+          <i data-lucide="award" class="text-yellow-400"></i> Veredicto Final
+        </h3>
+        <div class="space-y-4">
+          <div class="flex gap-4 items-start">
+            <div class="bg-indigo-500/20 p-2 rounded text-indigo-400 mt-1">1</div>
+            <p class="text-sm text-slate-300">
+              <strong class="text-white">Escalabilidad:</strong> El método del Gradiente es el único viable para Big Data. La Pseudoinversa colapsa exponencialmente.
+            </p>
+          </div>
+          <div class="flex gap-4 items-start">
+            <div class="bg-indigo-500/20 p-2 rounded text-indigo-400 mt-1">2</div>
+            <p class="text-sm text-slate-300">
+              <strong class="text-white">Eficiencia de Recursos:</strong> Usar Gradiente Descendente ahorra un <span class="text-emerald-400">99.9% de RAM</span> en comparación con la solución matricial directa.
+            </p>
+          </div>
+        </div>
+      </div>
+
+    </section>
+
+    <footer class="text-center pt-10 border-t border-white/5">
+      <a href="analisis_comparativo.pdf" target="_blank" class="group relative inline-flex items-center gap-3 px-8 py-4 bg-indigo-600 hover:bg-indigo-500 rounded-xl transition-all font-bold text-white overflow-hidden">
+        <div class="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform"></div>
+        <i data-lucide="file-text"></i>
+        <span>LEER INFORME COMPLETO PDF</span>
+      </a>
+      <p class="text-slate-600 text-xs mt-6">Desarrollado con ❤️ para el curso de Programación Numérica</p>
+    </footer>
+
+  </main>
+
+  <script>
+    lucide.createIcons();
+  </script>
+</body>
+</html>

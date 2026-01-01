@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="es" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>resumen del ticulo| Portfolio</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <style>
+    body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #030712; color: #e2e8f0; }
+    
+    /* Fondo Animado (Tonos Cian/Esmeralda para tema Médico) */
+    .bg-orb {
+      position: fixed; width: 600px; height: 600px; border-radius: 50%; filter: blur(100px); z-index: -1; opacity: 0.15;
+      animation: float 20s infinite alternate ease-in-out;
+    }
+    .orb-1 { top: -10%; left: -10%; background: #06b6d4; } /* Cyan */
+    .orb-2 { bottom: 10%; right: -5%; background: #10b981; animation-delay: -5s; } /* Emerald */
+    
+    @keyframes float { 0% { transform: translate(0, 0) scale(1); } 100% { transform: translate(30px, 50px) scale(1.1); } }
+
+    /* Paneles de Vidrio */
+    .glass-panel {
+      background: rgba(17, 24, 39, 0.7);
+      backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+      transition: transform 0.3s ease, border-color 0.3s ease;
+    }
+    .glass-panel:hover {
+      border-color: rgba(6, 182, 212, 0.5); /* Hover Cyan */
+      transform: translateY(-2px);
+    }
+
+    /* Estilos para el Diagrama de Flujo */
+    .flow-line {
+      width: 2px;
+      height: 40px;
+      background: linear-gradient(to bottom, #06b6d4, #10b981);
+      margin: 0 auto;
+    }
+    .flow-arrow {
+      width: 0; height: 0; 
+      border-left: 6px solid transparent; border-right: 6px solid transparent;
+      border-top: 8px solid #10b981;
+      margin: -5px auto 0;
+    }
+  </style>
+</head>
+<body class="min-h-screen relative overflow-x-hidden selection:bg-cyan-500 selection:text-white">
+
+  <div class="bg-orb orb-1"></div>
+  <div class="bg-orb orb-2"></div>
+
+  <nav class="fixed top-6 left-1/2 -translate-x-1/2 z-50">
+    <div class="glass-panel rounded-full px-6 py-3 flex items-center gap-6">
+      <a href="unidad2.html" class="text-sm font-semibold text-gray-400 hover:text-white transition-colors flex items-center gap-2">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
+        Panel Unidad 2
+      </a>
+      <div class="w-px h-4 bg-white/10"></div>
+      <span class="text-sm font-bold text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-emerald-400">
+        Actividad 8: Análisis Científico
+      </span>
+    </div>
+  </nav>
+
+  <main class="max-w-4xl mx-auto px-6 pt-32 pb-20">
+    
+    <header class="text-center mb-16 space-y-4">
+      <div class="inline-block px-3 py-1 rounded-full bg-cyan-500/10 border border-cyan-500/20 text-cyan-300 text-xs font-bold tracking-wider uppercase mb-2">
+        Procesamiento de Imágenes Médicas
+      </div>
+      <h1 class="text-3xl md:text-5xl font-extrabold tracking-tight text-white mb-4 leading-tight">
+        Non-rigid Medical Image Registration Using <span class="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-emerald-500">Image Field</span> in Demons Algorithm
+      </h1>
+      <p class="text-lg text-gray-400 max-w-2xl mx-auto">
+        Un análisis del método <strong>Field-Demons (FD)</strong> propuesto para mejorar la precisión en el registro de imágenes médicas (MRI y Fondo de Ojo).
+      </p>
+    </header>
+
+    <section class="grid md:grid-cols-2 gap-6 mb-12">
+      <div class="glass-panel rounded-2xl p-8 border-l-4 border-red-500/50">
+        <h3 class="text-xl font-bold text-white mb-4 flex items-center gap-2">
+          <span class="text-red-400">⚠️</span> El Problema
+        </h3>
+        <p class="text-gray-400 text-sm leading-relaxed">
+          [cite_start][cite: 97] Los algoritmos <strong>Demons tradicionales</strong> solo utilizan la información del gradiente (intensidad), desperdiciando la valiosa información direccional. Esto limita la precisión cuando hay deformaciones complejas en los tejidos médicos.
+        </p>
+      </div>
+
+      <div class="glass-panel rounded-2xl p-8 border-l-4 border-emerald-500/50">
+        <h3 class="text-xl font-bold text-white mb-4 flex items-center gap-2">
+          <span class="text-emerald-400">💡</span> La Solución (Field-Demons)
+        </h3>
+        <p class="text-gray-400 text-sm leading-relaxed">
+          [cite_start][cite: 93] Se propone incorporar el <strong>Campo de Orientación</strong> al algoritmo. Esto permite una representación más completa de las características espaciales, logrando un registro no rígido mucho más preciso.
+        </p>
+      </div>
+    </section>
+
+    <section class="glass-panel rounded-2xl p-8 mb-12 text-center relative overflow-hidden">
+      <div class="absolute top-0 right-0 w-64 h-64 bg-cyan-500/5 rounded-full blur-3xl -mr-16 -mt-16"></div>
+      
+      <h3 class="text-lg font-bold text-gray-300 mb-6 uppercase tracking-widest">Ecuación del Campo de Deformación</h3>
+      
+      <div class="bg-[#0b1120] rounded-xl p-6 inline-block border border-white/10 shadow-inner max-w-full overflow-x-auto">
+        <p class="text-2xl md:text-3xl font-serif text-white italic">
+          u = <span class="fraction inline-block text-center align-middle">
+            <span class="block border-b border-gray-500 pb-1">sin(2Φ<sub>F</sub>)·e<sub>O<sub>F</sub></sub> + sin(2Φ<sub>R</sub>)·e<sub>O<sub>R</sub></sub></span>
+            <span class="block pt-1 text-cyan-400">2kα</span>
+          </span>
+        </p>
+      </div>
+      <p class="text-xs text-gray-500 mt-4 max-w-xl mx-auto">
+        [cite_start][cite: 99] Donde <em>u</em> es el campo de deformación y los vectores <em>e</em> representan la orientación de las imágenes de consulta y referencia.
+      </p>
+    </section>
+
+    <section class="mb-16">
+      <h2 class="text-2xl font-bold text-white mb-6 flex items-center gap-2">
+        📊 Resultados Experimentales
+      </h2>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+        
+        <div class="glass-panel p-6 rounded-xl">
+          <p class="text-xs text-gray-400 uppercase mb-2">Imágenes MRI (Cerebro)</p>
+          <div class="text-3xl font-bold text-white mb-1">133.51</div>
+          <p class="text-sm text-emerald-400 font-semibold">MSE (Error Medio)</p>
+          [cite_start]<p class="text-xs text-gray-500 mt-2">[cite: 105] Superando el rango de 138-161 de otros métodos.</p>
+        </div>
+
+        <div class="glass-panel p-6 rounded-xl">
+          <p class="text-xs text-gray-400 uppercase mb-2">Fondo de Ojo</p>
+          <div class="text-3xl font-bold text-white mb-1">19.33</div>
+          <p class="text-sm text-emerald-400 font-semibold">MSE (Error Medio)</p>
+          [cite_start]<p class="text-xs text-gray-500 mt-2">[cite: 106] Mejor precisión que los métodos clásicos.</p>
+        </div>
+
+        <div class="glass-panel p-6 rounded-xl">
+          <p class="text-xs text-gray-400 uppercase mb-2">Eficiencia</p>
+          <div class="text-3xl font-bold text-white mb-1">2.02s</div>
+          <p class="text-sm text-blue-400 font-semibold">Tiempo Promedio</p>
+          [cite_start]<p class="text-xs text-gray-500 mt-2">[cite: 108] Mantiene la velocidad computacional del original.</p>
+        </div>
+
+      </div>
+    </section>
+
+    <section class="glass-panel rounded-2xl p-8 md:p-12 mb-12">
+      <h3 class="text-center text-xl font-bold text-white mb-10">Metodología del Proceso</h3>
+      
+      <div class="flex flex-col items-center max-w-md mx-auto">
+        
+        <div class="flex gap-4 w-full">
+          <div class="bg-blue-900/40 border border-blue-500/30 text-blue-200 px-4 py-3 rounded-lg w-1/2 text-center text-sm font-bold">Imagen Referencia (R)</div>
+          <div class="bg-yellow-900/40 border border-yellow-500/30 text-yellow-200 px-4 py-3 rounded-lg w-1/2 text-center text-sm font-bold">Imagen Consulta (F)</div>
+        </div>
+
+        <div class="flow-line"></div> <div class="flow-arrow"></div>
+
+        <div class="mt-2 bg-gray-800 border border-gray-600 text-gray-300 px-6 py-3 rounded-lg w-full text-center text-sm">
+          Cálculo de Campos de Imagen
+        </div>
+
+        <div class="flow-line"></div> <div class="flow-arrow"></div>
+
+        <div class="mt-2 bg-emerald-900/30 border border-emerald-500 text-white px-6 py-4 rounded-xl w-full text-center shadow-[0_0_15px_rgba(16,185,129,0.2)]">
+          <p class="text-xs text-emerald-400 font-bold uppercase mb-1">Innovación Principal (FD)</p>
+          <p class="text-sm">Usa Magnitud Gradiente + <span class="font-bold text-emerald-300">Dirección Orientación</span></p>
+        </div>
+
+        <div class="flow-line"></div> <div class="flow-arrow"></div>
+
+        <div class="mt-2 bg-gray-800 border border-gray-600 text-gray-300 px-6 py-3 rounded-lg w-full text-center text-sm">
+          Integración Iterativa (Gradiente + Orientación)
+        </div>
+
+        <div class="flow-line"></div> <div class="flow-arrow"></div>
+
+        <div class="mt-2 bg-gradient-to-r from-cyan-600 to-emerald-600 text-white px-8 py-4 rounded-xl w-full text-center font-bold shadow-lg">
+          Imagen Registrada Final
+        </div>
+
+      </div>
+    </section>
+
+    <div class="text-center">
+      <a href="resumen_articulo.pdf" target="_blank" class="inline-flex items-center gap-3 bg-white text-gray-900 px-8 py-4 rounded-full font-bold hover:bg-gray-200 transition-all transform hover:scale-105 shadow-[0_0_20px_rgba(255,255,255,0.3)]">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+        Ver Resumen Completo PDF
+      </a>
+    </div>
+
+  </main>
+</body>
+</html>
